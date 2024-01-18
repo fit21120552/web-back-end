@@ -3,8 +3,8 @@ const express = require("express");
 const route = express.Router();
 const userController = require('../controllers/user.c');
 
-//sign up
-route.post("/signup",userController.SignUp)
-//sign in
-route.post("/signin",userController.SignIn)
+//update password
+route.post("/passwordm/:username",userController.UpdatePassword)
+//home page
+route.get("/",userController.Home)
 module.exports = route; 
