@@ -26,22 +26,22 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send(err.message);
 });
 
-// // Connect to database
-// const DB = process.env.DATABASE.replace(
-//   '<PASSWORD>',
-//   process.env.DATABASE_PASSWORD
-// );
+// Connect to database
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
 
-// // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// mongoose.connect(DB, {
-//     useNewUrlParser: true,
-//     useCreateIndex: true,
-//     useFindAndModify: false,
-//     useUnifiedTopology: true,
-//   })
-//   .then(() => {
-//     console.log('connect to database successfully');
-//   });
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+mongoose.connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('connect to database successfully');
+  });
   
 
 

@@ -1,6 +1,5 @@
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const APIFeatures = require("./../utils/APIFeatures");
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -28,7 +27,6 @@ exports.updateOne = (Model) =>
     });
   });
 
-// factory update create tour review user
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.create(req.body);

@@ -22,26 +22,30 @@ const ProductSchema = new mongoose.Schema(
     rating: {
       type: Number,
       default: 4.5,
-      min: [1, "rating must be above 1"],
-      max: [5, "rating must be below 5"],
+    },
+    ratingsAverage: {
+      type: Number,
+      default: 4.5,
+      min: [1, "rating must be above 1.0"],
+      max: [5, "rating must be below 5.0"],
       set: (val) => Math.round(val * 10) / 10,
-    },
-    images: [String],
-    thumbnail: {
-      type: String,
-    },
-    category: {
-      type: String,
-      required: [true, "product must have category"],
-    },
-    brand: {
-      type: String,
-      required: [true, "product must have brand"],
     },
     stock: {
       type: Number,
       required: [true, "product must have stock"],
     },
+    brand: {
+      type: String,
+      required: [true, "product must have brand"],
+    },
+    category: {
+      type: String,
+      required: [true, "product must have category"],
+    },
+    thumbnail: {
+      type: String,
+    },
+    images: [String],
   },
   {
     toJSON: { virtuals: true },
