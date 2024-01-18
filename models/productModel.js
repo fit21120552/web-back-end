@@ -17,11 +17,11 @@ const ProductSchema = new mongoose.Schema(
     },
     discountPercentage: {
       type: String,
-      required: [true],
+      default: 0,
     },
     rating: {
       type: Number,
-      default: 4.5,
+      default: 0,
     },
     ratingsAverage: {
       type: Number,

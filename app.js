@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`));
 
 // middleware router
-// app.use("/api/v1/product", productRouter);
+app.use("/api/v1/product", productRouter);
 app.all("*", (req, res, next) => {
   next(new appError(`Can not find ${req.originalUrl} on server`, 404));
 });
