@@ -4,10 +4,10 @@ const passport = require('passport');
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const path = require("path");
-dotenv.config({ path: "../config.env" });
+dotenv.config({ path: "./../config.env" });
 const app = express();
-const ErrorHandlerController = require("../controllers/ErrorController.js");
-const appError = require("../utils/appError.js");
+const ErrorHandlerController = require("./../controllers/ErrorController.js");
+const appError = require("./../utils/appError.js");
 
 const auth = require('./auth.js');
 process.noDeprecation = true;
@@ -16,6 +16,7 @@ const userRouter = require('../routes/user.r.js');
 const adminRouter = require('../routes/admin.r.js');
 const commonRouter = require('../routes/common.r.js');
 const productRouter = require("../routes/productRoute.js");
+const categoryRouter = require("./../routes/categoryRoute.js");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -31,15 +32,14 @@ app.use(
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`));
+
 // middleware router
 app.use("/api/v1/product", productRouter);
-app.use("/user",auth.authentication,auth.authorization,userRouter);
-app.use(commonRouter);
-app.use("/admin",auth.authentication,auth.authorization,adminRouter);
-// middleware write log production and dev
+app.use("/api/v1/category", categoryRouter);
 // app.all("*", (req, res, next) => {
 //   next(new appError(`Can not find ${req.originalUrl} on server`, 404));
 // });
+
 app.use(ErrorHandlerController);
 
 //login with google
