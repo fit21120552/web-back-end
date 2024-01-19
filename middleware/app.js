@@ -10,7 +10,7 @@ process.noDeprecation = true;
 
 // router
 const productRouter = require("./routes/productRoute.js");
-
+const categoryRouter = require("./routes/categoryRoute.js");
 // middleware write log production and dev
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -21,6 +21,7 @@ app.use(express.static(`${__dirname}/public`));
 
 // middleware router
 app.use("/api/v1/product", productRouter);
+app.use("/api/v1/category", categoryRouter);
 app.all("*", (req, res, next) => {
   next(new appError(`Can not find ${req.originalUrl} on server`, 404));
 });
