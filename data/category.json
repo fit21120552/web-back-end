@@ -1,0 +1,222 @@
+[
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afef",
+      "65a9d7b4ad47b243bc49aff3",
+      "65a9d7b4ad47b243bc49aff2",
+      "65a9d7b4ad47b243bc49aff0",
+      "65a9d7b4ad47b243bc49aff1"
+    ],
+    "name": "mens-shirts",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49b00d",
+      "65a9d7b4ad47b243bc49b010",
+      "65a9d7b4ad47b243bc49b00e",
+      "65a9d7b4ad47b243bc49b00f",
+      "65a9d7b4ad47b243bc49b011"
+    ],
+    "name": "sunglasses",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49b017",
+      "65a9d7b4ad47b243bc49b018",
+      "65a9d7b4ad47b243bc49b019",
+      "65a9d7b4ad47b243bc49b01a",
+      "65a9d7b4ad47b243bc49b01b"
+    ],
+    "name": "motorcycle",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49aff4",
+      "65a9d7b4ad47b243bc49aff5",
+      "65a9d7b4ad47b243bc49aff6",
+      "65a9d7b4ad47b243bc49aff7",
+      "65a9d7b4ad47b243bc49aff8"
+    ],
+    "name": "mens-shoes",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afdc",
+      "65a9d7b4ad47b243bc49afdb",
+      "65a9d7b4ad47b243bc49afdd",
+      "65a9d7b4ad47b243bc49afde",
+      "65a9d7b4ad47b243bc49afdf"
+    ],
+    "name": "furniture",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afc2",
+      "65a9d7b4ad47b243bc49afc3",
+      "65a9d7b4ad47b243bc49afc4",
+      "65a9d7b4ad47b243bc49afc5",
+      "65a9d7b4ad47b243bc49afc6"
+    ],
+    "name": "laptops",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49b00b",
+      "65a9d7b4ad47b243bc49b008",
+      "65a9d7b4ad47b243bc49b00a",
+      "65a9d7b4ad47b243bc49b009",
+      "65a9d7b4ad47b243bc49b00c"
+    ],
+    "name": "womens-jewellery",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afe0",
+      "65a9d7b4ad47b243bc49afe3",
+      "65a9d7b4ad47b243bc49afe4",
+      "65a9d7b4ad47b243bc49afe2",
+      "65a9d7b4ad47b243bc49afe1"
+    ],
+    "name": "tops",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49b012",
+      "65a9d7b4ad47b243bc49b016",
+      "65a9d7b4ad47b243bc49b013",
+      "65a9d7b4ad47b243bc49b015",
+      "65a9d7b4ad47b243bc49b014"
+    ],
+    "name": "automotive",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49b004",
+      "65a9d7b4ad47b243bc49b005",
+      "65a9d7b4ad47b243bc49b003",
+      "65a9d7b4ad47b243bc49b006",
+      "65a9d7b4ad47b243bc49b007"
+    ],
+    "name": "womens-bags",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49affa",
+      "65a9d7b4ad47b243bc49aff9",
+      "65a9d7b4ad47b243bc49affd",
+      "65a9d7b4ad47b243bc49affb",
+      "65a9d7b4ad47b243bc49affc"
+    ],
+    "name": "mens-watches",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afd9",
+      "65a9d7b4ad47b243bc49afd6",
+      "65a9d7b4ad47b243bc49afd8",
+      "65a9d7b4ad47b243bc49afda",
+      "65a9d7b4ad47b243bc49afd7"
+    ],
+    "name": "home-decoration",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afea",
+      "65a9d7b4ad47b243bc49afed",
+      "65a9d7b4ad47b243bc49afec",
+      "65a9d7b4ad47b243bc49afeb",
+      "65a9d7b4ad47b243bc49afee"
+    ],
+    "name": "womens-shoes",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49affe",
+      "65a9d7b4ad47b243bc49b000",
+      "65a9d7b4ad47b243bc49afff",
+      "65a9d7b4ad47b243bc49b001",
+      "65a9d7b4ad47b243bc49b002"
+    ],
+    "name": "womens-watches",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afe8",
+      "65a9d7b4ad47b243bc49afe5",
+      "65a9d7b4ad47b243bc49afe9",
+      "65a9d7b4ad47b243bc49afe6",
+      "65a9d7b4ad47b243bc49afe7"
+    ],
+    "name": "womens-dresses",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afce",
+      "65a9d7b4ad47b243bc49afcc",
+      "65a9d7b4ad47b243bc49afcf",
+      "65a9d7b4ad47b243bc49afcd",
+      "65a9d7b4ad47b243bc49afd0"
+    ],
+    "name": "skincare",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afc7",
+      "65a9d7b4ad47b243bc49afca",
+      "65a9d7b4ad47b243bc49afc9",
+      "65a9d7b4ad47b243bc49afc8",
+      "65a9d7b4ad47b243bc49afcb"
+    ],
+    "name": "fragrances",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afbd",
+      "65a9d7b4ad47b243bc49afbe",
+      "65a9d7b4ad47b243bc49afbf",
+      "65a9d7b4ad47b243bc49afc0",
+      "65a9d7b4ad47b243bc49afc1"
+    ],
+    "name": "smartphones",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49afd1",
+      "65a9d7b4ad47b243bc49afd2",
+      "65a9d7b4ad47b243bc49afd3",
+      "65a9d7b4ad47b243bc49afd4",
+      "65a9d7b4ad47b243bc49afd5"
+    ],
+    "name": "groceries",
+    "productCount": 5
+  },
+  {
+    "products": [
+      "65a9d7b4ad47b243bc49b01c",
+      "65a9d7b4ad47b243bc49b01d",
+      "65a9d7b4ad47b243bc49b01f",
+      "65a9d7b4ad47b243bc49b01e",
+      "65a9d7b4ad47b243bc49b020"
+    ],
+    "name": "lighting",
+    "productCount": 5
+  }
+]
