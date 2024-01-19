@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 const session = require("express-session");
 const mongoose = require('mongoose');
 dotenv.config({ path: './config.env' });
-const app = require('./app.js');
+const app = require('./middleware/app.js');
 const port = process.env.port || 3000;
 const userRouter = require('./routes/user.r.js');
 const productRouter = require('./routes/productRoute.js');
@@ -43,7 +43,6 @@ mongoose.connect(DB, {
     console.log('connect to database successfully');
   });
   
-
 
 
 // Start sever
