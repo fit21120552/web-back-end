@@ -8,7 +8,6 @@ dotenv.config({ path: "./../config.env" });
 const app = express();
 const ErrorHandlerController = require("./../controllers/ErrorController.js");
 const appError = require("./../utils/appError.js");
-
 const auth = require('./auth.js');
 process.noDeprecation = true;
 //route
@@ -36,6 +35,9 @@ app.use(express.static(`${__dirname}/public`));
 // middleware router
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/category", categoryRouter);
+app.use("/user",auth.authentication,auth.authorization,userRouter);
+app.use(commonRouter);
+app.use("/admin",auth.authentication,auth.authorization,adminRouter);
 // app.all("*", (req, res, next) => {
 //   next(new appError(`Can not find ${req.originalUrl} on server`, 404));
 // });
