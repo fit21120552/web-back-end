@@ -2,15 +2,15 @@ const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const path = require("path");
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./../config.env" });
 const app = express();
-const ErrorHandlerController = require("./controllers/ErrorController.js");
-const appError = require("./utils/appError.js");
+const ErrorHandlerController = require("./../controllers/ErrorController.js");
+const appError = require("./../utils/appError.js");
 process.noDeprecation = true;
 
 // router
-const productRouter = require("./routes/productRoute.js");
-const categoryRouter = require("./routes/categoryRoute.js");
+const productRouter = require("./../routes/productRoute.js");
+const categoryRouter = require("./../routes/categoryRoute.js");
 // middleware write log production and dev
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
