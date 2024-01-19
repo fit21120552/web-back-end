@@ -90,13 +90,38 @@ module.exports =
     //update password
     UpdatePassword: async (req, res) => {
         try {
-           const username= req.params.username
-            const {password}=req.body
+            const username = req.params.username
+            const { password } = req.body
             const hash = bcrypt.hashSync(password, saltRounds);
-            await userModel.UpdateOneField(username,"password",hash);
+            await userModel.UpdateOneField(username, "password", hash);
             return res.json("Update successfully!");
         } catch (error) {
             next(error);
         }
     },
+    //login with google
+    Success: async (req, res) => {
+
+        const user = req.session.passport.user;
+        const email = user.email;
+        const username = user.displayName;
+        const User = await userModel.GetUser(username);
+        let sess = req.session;
+        sess.isAuthenticated = true;
+        sess.username = username;
+        sess.role = "user";
+        if (User != undefined) {
+            if (User.username == username) {
+                return res.redirect("/user")
+            }
+            else {
+                const result = await userModel.register(username, "null", email, "user");
+                if (result != null) {return res.redirect("/user") }
+            }
+        }
+        else {
+            const result = await userModel.register(username, "null", email, "user");
+            if (result != null) { return res.redirect("/user")}
+        }
+    }
 }
