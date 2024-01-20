@@ -17,7 +17,8 @@ class APIFeatures {
     this.query.find(JSON.parse(queryStr));
     return this;
   }
-  sort() {``
+  sort() {
+    ``;
     // SORTING
     // gọi api như sau : http://localhost:3000/api/v1/tours?sort=-price
     if (this.queryString.sort) {
@@ -35,7 +36,7 @@ class APIFeatures {
       const fields = this.queryString.fields.split(",").join(" ");
       this.query = this.query.select(fields);
     } else {
-      this.query = this.query.select("-__v");
+      this.query = this.query.select("-__v -id");
     }
     return this;
   }
