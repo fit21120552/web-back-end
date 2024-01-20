@@ -1,31 +1,48 @@
 const mongoose = require("mongoose");
 const Product = require("./../models/productModel");
-const ReviewSchema = new mongoose.Schema({
-  review: {
-    type: String,
-    required: [true, "tour must have review"],
+const ReviewSchema = new mongoose.Schema(
+  {
+    review: {
+      type: String,
+      required: [true, "tour must have review"],
+    },
+    createAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: "user",
+      required: [true, "reviews must belong to have user"],
+    },
+    product: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Product",
+      required: [true, "reviews must belong to have product"],
+    },
   },
-  createAt: {
-    type: Date,
-    default: Date.now(),
-  },
-  rating: {
-    type: Number,
-    min: 1,
-    max: 5,
-  },
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: "user",
-    required: [true, "reviews must belong to have user"],
-  },
-  product: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Product",
-    required: [true, "reviews must belong to have product"],
-  },
-});
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
+ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
+ReviewSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "user",
+    select: "username email -_id",
+  }).populate({
+    path: "product",
+    select: "title  ",
+  });
+  next();
+});
 ReviewSchema.statics.calcAverageRatings = async function (productId) {
   const stats = await this.aggregate([
     {
@@ -51,7 +68,7 @@ ReviewSchema.statics.calcAverageRatings = async function (productId) {
     });
   }
 };
-ReviewSchema.post('save', function () {
+ReviewSchema.post("save", function () {
   this.constructor.calcAverageRatings(this.product);
 });
 
