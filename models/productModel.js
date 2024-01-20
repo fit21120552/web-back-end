@@ -30,6 +30,10 @@ const ProductSchema = new mongoose.Schema(
       max: [5, "rating must be below 5.0"],
       set: (val) => Math.round(val * 10) / 10,
     },
+    ratingsQuantity: {
+      type: Number,
+      default: 0,
+    },
     stock: {
       type: Number,
       required: [true, "product must have stock"],
@@ -52,6 +56,12 @@ const ProductSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+ProductSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "product",
+  localField: "_id",
+});
 
 const product = mongoose.model("Product", ProductSchema);
 module.exports = product;
