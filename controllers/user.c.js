@@ -55,7 +55,6 @@ module.exports =
                 return res.json("Password isn't correct! ");
             }
             //check role
-            req.session.cookie.maxAge =  3 * 60 * 1000; //3mins
             let sess = req.session;
             sess.idUser=user._id;
             sess.isAuthenticated = true;
