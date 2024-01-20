@@ -23,10 +23,10 @@ module.exports =
         }
       
     },
-    UpdateOneField: async(username,namefield,newvalue)=>
+    UpdateOneField: async(id,namefield,newvalue)=>
     {
         try {
-            await userDB.UpdateOneField(username,namefield,newvalue);
+            await userDB.UpdateOneField(id,namefield,newvalue);
         } catch (error) {
             throw error;
         }

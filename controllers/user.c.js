@@ -91,10 +91,10 @@ module.exports =
     //update password
     UpdatePassword: async (req, res) => {
         try {
-            const username = req.params.username
+            const  id = req.params.id
             const { password } = req.body
             const hash = bcrypt.hashSync(password, saltRounds);
-            await userModel.UpdateOneField(username, "password", hash);
+            await userModel.UpdateOneField(id, "password", hash);
             return res.json("Update successfully!");
         } catch (error) {
             next(error);

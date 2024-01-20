@@ -14,9 +14,9 @@ module.exports =
         const data = await collection.find({username: name})
         return data;
     },
-    UpdateOneField: async(Username,namefield,newvalue)=>
+    UpdateOneField: async(ID,namefield,newvalue)=>
     {
-        await collection.updateOne({ username: Username},
+        await collection.updateOne({ _id: ID},
             {
                 $set:
                 {
