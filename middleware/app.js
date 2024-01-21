@@ -17,6 +17,7 @@ const commonRouter = require("../routes/common.r.js");
 const productRouter = require("../routes/productRoute.js");
 const categoryRouter = require("./../routes/categoryRoute.js");
 const reviewRouter = require("./../routes/reviewRoute.js");
+const cartRouter = require("./../routes/cartRoute.js");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -37,6 +38,7 @@ app.use(express.static(`${__dirname}/public`));
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/carts", cartRouter);
 app.use("/user", auth.authentication, auth.authorization, userRouter);
 app.use(commonRouter);
 app.use("/admin", auth.authentication, auth.authorization, adminRouter);
