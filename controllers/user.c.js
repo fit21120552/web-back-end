@@ -1,5 +1,7 @@
 const userModel = require('../models/user.m');
 const bcrypt = require("bcryptjs");
+const { verify } = require('crypto');
+const nodemailer = require('nodemailer');
 const saltRounds = 10;
 
 module.exports =
@@ -56,7 +58,7 @@ module.exports =
             }
             //check role
             let sess = req.session;
-            sess.idUser=user._id;
+            sess.idUser = user._id;
             sess.isAuthenticated = true;
             sess.username = username;
             sess.role = user.role;
@@ -91,7 +93,7 @@ module.exports =
     //update password
     UpdatePassword: async (req, res) => {
         try {
-            const  id = req.params.id
+            const id = req.params.id
             const { password } = req.body
             const hash = bcrypt.hashSync(password, saltRounds);
             await userModel.UpdateOneField(id, "password", hash);
@@ -111,18 +113,69 @@ module.exports =
         sess.isAuthenticated = true;
         sess.username = username;
         sess.role = "user";
+
         if (User != undefined) {
             if (User.username == username) {
                 return res.redirect("/user")
             }
             else {
                 const result = await userModel.register(username, "null", email, "user");
-                if (result != null) {return res.redirect("/user") }
+                if (result != null) { return res.redirect("/user") }
             }
         }
         else {
             const result = await userModel.register(username, "null", email, "user");
-            if (result != null) { return res.redirect("/user")}
+            if (result != null) { return res.redirect("/user") }
         }
+    },
+    //reset password
+    GetCodeEmail: async (req, res) => {
+        const { username, email } = req.body;
+        const User = await userModel.GetUser(username);
+        if (User == undefined) {
+            return res.json("User not exits !")
+        }
+        if (User.email != email) {
+            return res.json("The email register is not correct !");
+        }
+        //send code to email
+        var transporter = nodemailer.createTransport({
+           service: "gmail",
+            auth: {
+                user: 'pass40697@gmail.com',
+                pass: 'lvsjcyqdojmyxazv'
+            }
+        });
+        
+        var verifycode = Math.floor(100000 + Math.random() * 900000);
+        req.session.verifycode = verifycode;
+        req.session.cookie.makeAge=3*60*1000;
+        var mailOptions = {
+            from: 'pass40697@gmail.com',
+            to: email,
+            subject: 'Verify code to reset password for your account',
+            text: `Your verify code is  ${verifycode}`
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                return res.json("We send code with 5 numbers to email please check !")
+            }
+        });
+        
+    },
+    //Check code
+    CheckCode: async(req,res)=>
+    {
+        const {verifyCode}=req.body;
+        
+        if(req.session.verifycode==verifyCode)
+        {
+            return res.json("Next to page reset password");
+        }
+        return res.json("code is not correct");
     }
+
 }
