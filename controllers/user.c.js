@@ -60,11 +60,7 @@ module.exports = {
       sess.isAuthenticated = true;
       sess.username = username;
       sess.role = user.role;
-      if (user.role == "user") {
-        return res.redirect("/user");
-      } else {
-        return res.redirect("/admin");
-      }
+      return res.json(user);
     } catch (error) {
       next(error);
     }
