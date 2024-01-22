@@ -1,8 +1,8 @@
 const dotenv = require('dotenv');
-
 const mongoose = require('mongoose');
 dotenv.config({ path: './config.env' });
 const app = require('./middleware/app.js');
+
 const port = process.env.port || 3000;
 
 app.use((err, req, res, next) => {
