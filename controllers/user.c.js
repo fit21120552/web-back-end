@@ -32,8 +32,7 @@ module.exports = {
       }
       const result = await userModel.register(username, hash, email, role);
       if (result != null) {
-        const data = await userModel.GetUser(username);
-        return res.json(data);
+        return res.json("success");
       }
       
     } catch (error) {
