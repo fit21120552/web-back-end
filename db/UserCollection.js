@@ -3,25 +3,38 @@ const collection = require('../configs/db_connection');
 
 module.exports =
 {
-    SignUp: async(username,password,email,role)=>
-    {
-        const data = {username,password,email,role};
-        const userdata = await collection.insertMany(data);
-        return userdata;
+    SignUp: async (username, password, email, role) => {
+
+        try {
+            const data = { username, password, email, role };
+            const userdata = await collection.insertMany(data);
+            return userdata;
+        } catch (error) {
+            throw error
+        }
+
     },
-    GetUserByName: async(name)=>
-    {
-        const data = await collection.find({username: name})
-        return data;
+    GetUserByName: async (name) => {
+        try {
+            const data = await collection.find({ username: name })
+            return data;
+        } catch (error) {
+            throw error
+        }
+
     },
-    UpdateOneField: async(ID,namefield,newvalue)=>
-    {
-        await collection.updateOne({ _id: ID},
-            {
-                $set:
+    UpdateOneField: async (ID, namefield, newvalue) => {
+        try {
+            await collection.updateOne({ _id: ID },
                 {
-                    [namefield]: newvalue
-                },
-            })
+                    $set:
+                    {
+                        [namefield]: newvalue
+                    },
+                })
+        } catch (error) {
+            throw error;
+        }
+
     }
 }
