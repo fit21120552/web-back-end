@@ -23,6 +23,15 @@ module.exports =
         }
 
     },
+    GetUserByEmail: async (mail) => {
+        try {
+            const data = await collection.find({ email: mail })
+            return data;
+        } catch (error) {
+            throw error
+        }
+
+    },
     UpdateOneField: async (ID, namefield, newvalue) => {
         try {
             await collection.updateOne({ _id: ID },

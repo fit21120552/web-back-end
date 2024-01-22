@@ -21,21 +21,21 @@ module.exports = {
       //hash password
       const hash = bcrypt.hashSync(password, saltRounds);
       const user = await userModel.GetUser(username);
-      if (user != undefined) {
-        if (user.username == username) {
-          return res.json("Exists username");
-        } else {
-          const result = await userModel.register(username, hash, email, role);
-          if (result != null) {
-            return res.json("success");
-          }
-        }
-      } else {
-        const result = await userModel.register(username, hash, email, role);
-        if (result != null) {
-          return res.json("success");
-        }
+      const userM = await userModel.GetUserByMail(email);
+      if(user!=undefined)
+      {
+        return res.json("Exists username!");
       }
+      if(userM!=undefined)
+      {
+        return res.json("Exists email!");
+      }
+      const result = await userModel.register(username, hash, email, role);
+      if (result != null) {
+        const data = await userModel.GetUser(username);
+        return res.json(data);
+      }
+      
     } catch (error) {
       next(error);
     }
