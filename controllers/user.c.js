@@ -2,6 +2,7 @@ const userModel = require("../models/user.m");
 const bcrypt = require("bcryptjs");
 const { verify } = require("crypto");
 const nodemailer = require("nodemailer");
+const { isEmail } = require("validator");
 const saltRounds = 10;
 
 module.exports = {
@@ -22,19 +23,17 @@ module.exports = {
       const hash = bcrypt.hashSync(password, saltRounds);
       const user = await userModel.GetUser(username);
       const userM = await userModel.GetUserByMail(email);
-      if(user!=undefined)
-      {
+      if (user != undefined) {
         return res.json("Exists username!");
       }
-      if(userM!=undefined)
-      {
+      if (userM != undefined) {
         return res.json("Exists email!");
       }
       const result = await userModel.register(username, hash, email, role);
       if (result != null) {
         return res.json("success");
       }
-      
+
     } catch (error) {
       next(error);
     }
@@ -42,7 +41,18 @@ module.exports = {
   //handle sign in
   SignIn: async (req, res) => {
     try {
-      const { username, password } = req.body;
+      const { username="", password="",email="" } = req.body;
+      //login with google
+      const userM = await userModel.GetUserByMail(email);
+      if(userM!=undefined)
+      {
+        let sess = req.session;
+        sess.idUser = userM._id;
+        sess.isAuthenticated = true;
+        sess.username = userM.username;
+        sess.role = userM.role;
+        return res.json(userM);
+      }
       //check username ( get user by user name)
       const user = await userModel.GetUser(username);
       if (user == undefined) {
@@ -97,27 +107,17 @@ module.exports = {
     const user = req.session.passport.user;
     const email = user.email;
     const username = user.displayName;
-    const User = await userModel.GetUser(username);
+    const data = await userModel.GetUserByMail(email);
     let sess = req.session;
     sess.isAuthenticated = true;
     sess.username = username;
     sess.role = "user";
-
-    if (User != undefined) {
-      if (User.username == username) {
-        return res.redirect("/user");
-      } else {
-        const result = await userModel.register(username, "null", email, "user");
-        if (result != null) {
-          return res.redirect("/user");
-        }
-      }
-    } else {
+    if (data == undefined) {
       const result = await userModel.register(username, "null", email, "user");
-      if (result != null) {
-        return res.redirect("/user");
-      }
+      const returnData =  await userModel.GetUserByMail(email);
+      return res.redirect(`http://localhost:3001/login?email=${email}`)
     }
+    return res.redirect(`http://localhost:3001/login?email=${email}`)
   },
   //reset password
   GetCodeEmail: async (req, res) => {
