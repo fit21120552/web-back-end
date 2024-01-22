@@ -1,10 +1,8 @@
 const express = require("express");
-const CartRouter = express.Router();
+const CartRouter = express.Router({ mergeParams: true });
 const CartController = require("./../controllers/cartController");
-
-CartRouter.route("/")
-  .get(CartController.checkUserIsLogin, CartController.getCart)
-  .post(CartController.setUserIsLogin, CartController.createCart);
+const auth = require("./../middleware/auth");
+CartRouter.route("/").get(CartController.getCart).post(CartController.createCart);
 CartRouter.route("/:id")
   .get(CartController.getCartById)
   .patch(CartController.updateCart)

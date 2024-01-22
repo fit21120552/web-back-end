@@ -9,7 +9,8 @@ const CartSchema = new mongoose.Schema({
   ],
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: "User",
+    ref: "user",
+    unique: true,
   },
   quantity: {
     type: Number,
@@ -18,7 +19,6 @@ const CartSchema = new mongoose.Schema({
   createAt: {
     type: Date,
     default: Date.now(),
-    unique: true,
   },
 });
 
@@ -30,10 +30,13 @@ CartSchema.pre(/^find/, function (next) {
   this.populate({
     path: "product",
     select: "title price brand category discountPercentage",
-  }).populate({
+  });
+  this.populate({
     path: "user",
     select: "username email",
   });
+  next();
 });
-const Cart = mongoose.model("Cart", CartSchema);
-module.exports = Cart;
+
+const cart = mongoose.model("Cart", CartSchema);
+module.exports = cart;
