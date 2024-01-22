@@ -26,6 +26,13 @@ CartSchema.pre("save", async function (next) {
   this.quantity = this.product.length;
 });
 
+CartSchema.post("findOneAndUpdate", async function (doc) {
+  if (doc) {
+    const updatedCart = await this.model.findOne(this.getQuery());
+    updatedCart.quantity = updatedCart.product.length;
+    await updatedCart.save();
+  }
+});
 CartSchema.pre(/^find/, function (next) {
   this.populate({
     path: "product",
