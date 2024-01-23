@@ -11,16 +11,13 @@ class APIFeatures {
     excludedFields.forEach((el) => delete queryObj[el]);
     // 1B) advanced filtering
     let queryStr = JSON.stringify(queryObj);
-    // gọi api như sau : http://localhost:3000/api/v1/tours?duration[gte]=5&difficulty=easy
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
     this.query.find(JSON.parse(queryStr));
     return this;
   }
   sort() {
-    ``;
     // SORTING
-    // gọi api như sau : http://localhost:3000/api/v1/tours?sort=-price
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(",").join(" ");
       this.query = this.query.sort(sortBy);
@@ -31,7 +28,6 @@ class APIFeatures {
   }
   fields() {
     // field limiting
-    // gọi api như sau : http://localhost:3000/api/v1/tours?fields=name,duration,difficulty,price
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(",").join(" ");
       this.query = this.query.select(fields);
@@ -40,13 +36,18 @@ class APIFeatures {
     }
     return this;
   }
-  pagination() {
-    // 4)pagination
-    // gọi api như sau : http://localhost:3000/api/v1/tours?page=2&limit=10
+  pagination(totalDocuments) {
+    // 4) pagination
     const page = this.queryString.page * 1 || 1;
     const limit = this.queryString.limit * 1 || 100;
     const skip = (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
+    // Calculate total number of pages
+    const totalPages = Math.ceil(totalDocuments / limit);
+
+    // Add total pages to the response
+    this.query.totalPages = totalPages;
+
     return this;
   }
 }
