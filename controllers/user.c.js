@@ -166,6 +166,6 @@ module.exports = {
       await userModel.UpdateOneField(id, "password", hash);
       return res.json("success");
     }
-    return res.json("Your code is not correct");
+    return res.json("Your code is not correct !");
   },
 };
