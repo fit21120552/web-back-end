@@ -7,6 +7,5 @@ const cartRouter = require("./cartRoute");
 route.post("/passwordm/:id", userController.UpdatePassword);
 //home page
 route.get("/", userController.Home);
-
 route.use("/carts", cartRouter);
 module.exports = route;
