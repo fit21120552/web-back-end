@@ -43,11 +43,15 @@ class APIFeatures {
     const skip = (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
     // Calculate total number of pages
-    const totalPages = Math.ceil(totalDocuments / limit);
+    let totalPages = 0;
+    if (this.queryString.page) {
+      totalPages = Math.ceil(totalDocuments / limit);
+    } else {
+      totalPages = 1;
+    }
 
     // Add total pages to the response
     this.query.totalPages = totalPages;
-
     return this;
   }
 }
