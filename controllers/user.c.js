@@ -165,7 +165,7 @@ module.exports = {
       const id = user._id;
       const hash = bcrypt.hashSync(password, saltRounds);
       await userModel.UpdateOneField(id, "password", hash);
-      return res.json("Password change!");
+      return res.json("success");
     }
     return res.json("Your code is not correct");
   },
