@@ -4,7 +4,8 @@ const { verify } = require("crypto");
 const nodemailer = require("nodemailer");
 const { isEmail } = require("validator");
 const saltRounds = 10;
-
+//collections sessions
+const sessionModel = require('../models/session.m');
 module.exports = {
   //Home
   Home: async (req, res) => {
@@ -42,11 +43,10 @@ module.exports = {
   //handle sign in
   SignIn: async (req, res) => {
     try {
-      const { username="", password="",email="" } = req.body;
+      const { username = "", password = "", email = "" } = req.body;
       //login with google
       const userM = await userModel.GetUserByMail(email);
-      if(userM!=undefined)
-      {
+      if (userM != undefined) {
         let sess = req.session;
         sess.idUser = userM._id;
         sess.isAuthenticated = true;
@@ -116,59 +116,73 @@ module.exports = {
     sess.role = "user";
     if (data == undefined) {
       const result = await userModel.register(username, "null", email, "user");
-      const returnData =  await userModel.GetUserByMail(email);
+      const returnData = await userModel.GetUserByMail(email);
       return res.redirect(`http://localhost:3001/login?email=${email}`)
     }
     return res.redirect(`http://localhost:3001/login?email=${email}`)
   },
   //reset password
-  GetCodeEmail: async (req, res) => {
-    const { username, email } = req.body;
-    const User = await userModel.GetUser(username);
-    if (User == undefined) {
-      return res.json("User not exits !");
-    }
-    if (User.email != email) {
-      return res.json("The email register is not correct !");
-    }
-    //send code to email
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "pass40697@gmail.com",
-        pass: "lvsjcyqdojmyxazv",
-      },
-    });
-    var verifycode = Math.floor(100000 + Math.random() * 900000);
-    req.session.verifycode = verifycode;
-    req.session.cookie.maxAge = 3000 * 60 * 1000 
-    console.log(req.session)
-    var mailOptions = {
-      from: "pass40697@gmail.com",
-      to: email,
-      subject: "Verify code to reset password for your account",
-      text: `Your verify code is  ${verifycode}`,
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        return res.json("We send code with 6 numbers to email please check !");
+  GetCodeEmail: async (req, res, next) => {
+    try {
+      const { username, email } = req.body;
+      const User = await userModel.GetUser(username);
+      if (User == undefined) {
+        return res.json("User not exits !");
       }
-    });
-  },
-
-  //Check code
-  CheckCode: async (req, res) => {
-    const { verifyCode,username,password } = req.body;
-    console.log(req.session)
-    if (req.session.verifycode == verifyCode) {
-      const user = await userModel.GetUser(username);
-      const id = user._id;
-      const hash = bcrypt.hashSync(password, saltRounds);
-      await userModel.UpdateOneField(id, "password", hash);
-      return res.json("success");
+      if (User.email != email) {
+        return res.json("The email register is not correct !");
+      }
+      //send code to email
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "pass40697@gmail.com",
+          pass: "lvsjcyqdojmyxazv",
+        },
+      });
+      req.header = "check";
+      var verifycode = Math.floor(100000 + Math.random() * 900000);
+      req.session.verifycode = verifycode;
+      req.session.cookie.maxAge = 3000 * 60 * 1000
+      const sessionId = req.sessionID;
+      var mailOptions = {
+        from: "pass40697@gmail.com",
+        to: email,
+        subject: "Verify code to reset password for your account",
+        text: `Your verify code is  ${verifycode}`,
+      };
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          res.status(500).json({ error: 'Something not correct please try again !' });
+        } else {
+          res.status(200).json({msg: "We send code with 6 numbers to email please check !",sessionId});
+        }
+      });
+    } catch (error) {
+      next(error)
     }
-    return res.json("Your code is not correct !");
+  },
+  //Check code
+  CheckCode: async (req, res, next) => {
+    try {
+      const { verifyCode, username, password } = req.body;
+      const sessionId = "l32AG_ip1bCz4MYlbF187t7fwyuRAsYB";
+      const data = await sessionModel.GetOneSession(sessionId);
+      const parsedSession = JSON.parse(data.session);
+      req.session.verifycode = parsedSession.verifycode;
+      req.session.cookie.maxAge = 3000 * 60 * 1000
+      if (req.session.verifycode == verifyCode) {
+        const user = await userModel.GetUser(username);
+        const id = user._id;
+        const hash = bcrypt.hashSync(password, saltRounds);
+        await userModel.UpdateOneField(id, "password", hash);
+        return res.json("success");
+      }
+      return res.json("Your code is not correct !");
+    }
+    catch (error) {
+      next(error)
+    }
   }
+
 };

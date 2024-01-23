@@ -7,6 +7,9 @@ const path = require("path");
 dotenv.config({ path: "./../config.env" });
 const app = express();
 var cors = require('cors');
+//use mongo store to save session
+const MongoStore = require('connect-mongo');
+
 const ErrorHandlerController = require("./../controllers/ErrorController.js");
 const appError = require("./../utils/appError.js");
 const auth = require("./auth.js");
@@ -23,20 +26,27 @@ if (process.env.NODE_ENV === "development") {
 }
 
 //use session
+
 app.use(
   session({
     secret: "secret-key-123",
+    store: MongoStore.create({
+      mongoUrl: 'mongodb+srv://thuan:vsEsXKsLsoKlpegT@cluster0.j4s8j5c.mongodb.net/QLBANHANG?retryWrites=true&w=majority',
+    }),
     resave: false,
-    saveUninitialized: true,
-    cookie: {secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 },
+    saveUninitialized: false,
+    cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 },
+    credentials: true,
   })
 );
 app.use(
   cors({
-      origin: `http://localhost:3001`,
-      credentials: true,
-  }),
+    origin: 'http://localhost:3001',
+    credentials: true,
+
+  })
 );
+
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`));
