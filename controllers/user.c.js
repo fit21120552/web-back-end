@@ -152,14 +152,13 @@ module.exports = {
       if (error) {
         console.log(error);
       } else {
-        return res.json("We send code with 5 numbers to email please check !");
+        return res.json("We send code with 6 numbers to email please check !");
       }
     });
   },
   //Check code
   CheckCode: async (req, res) => {
     const { verifyCode,username,password } = req.body;
-
     if (req.session.verifycode == verifyCode) {
       const user = await userModel.GetUser(username);
       const id = user._id;
