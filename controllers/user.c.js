@@ -97,7 +97,7 @@ module.exports = {
       const { password } = req.body;
       const hash = bcrypt.hashSync(password, saltRounds);
       await userModel.UpdateOneField(id, "password", hash);
-      return res.json("Update successfully!");
+      return res.json("success");
     } catch (error) {
       next(error);
     }
@@ -137,10 +137,11 @@ module.exports = {
         pass: "lvsjcyqdojmyxazv",
       },
     });
-
     var verifycode = Math.floor(100000 + Math.random() * 900000);
     req.session.verifycode = verifycode;
-    req.session.cookie.makeAge = 3 * 60 * 1000;
+    req.session.cookie.expires = false;
+    req.session.cookie.maxAge = 3 * 60 * 1000;
+    console.log(req.session)
     var mailOptions = {
       from: "pass40697@gmail.com",
       to: email,
@@ -159,6 +160,7 @@ module.exports = {
   //Check code
   CheckCode: async (req, res) => {
     const { verifyCode,username,password } = req.body;
+    console.log(req.session)
     if (req.session.verifycode == verifyCode) {
       const user = await userModel.GetUser(username);
       const id = user._id;
