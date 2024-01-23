@@ -1,6 +1,8 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 dotenv.config({ path: "./config.env" });
+const validator = require("validator");
+
 //create schema
 const userSchema = new mongoose.Schema({
   username: {
@@ -10,10 +12,14 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    //minlength: 8,
   },
   email: {
     type: String,
     required: true,
+    unique: true, 
+    lowercase: true, 
+    validate: [validator.isEmail, "Invalid Email"],
   },
   role: {
     type: String,

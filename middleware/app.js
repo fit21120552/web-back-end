@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const path = require("path");
 dotenv.config({ path: "./../config.env" });
 const app = express();
+var cors = require('cors');
 const ErrorHandlerController = require("./../controllers/ErrorController.js");
 const appError = require("./../utils/appError.js");
 const auth = require("./auth.js");
@@ -20,14 +21,21 @@ const reviewRouter = require("./../routes/reviewRoute.js");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
 //use session
 app.use(
   session({
     secret: "secret-key-123",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
+    cookie: {secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 },
   })
+);
+app.use(
+  cors({
+      origin: `http://localhost:3001`,
+      credentials: true,
+  }),
 );
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false }));

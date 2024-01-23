@@ -23,10 +23,29 @@ module.exports =
         }
       
     },
+    GetUserByMail: async(mail)=>
+    {
+        try {
+            const result = await userDB.GetUserByEmail(mail);
+            return result[0];
+        } catch (error) {
+            throw error;
+        }
+      
+    },
     UpdateOneField: async(id,namefield,newvalue)=>
     {
         try {
             await userDB.UpdateOneField(id,namefield,newvalue);
+        } catch (error) {
+            throw error;
+        }
+    },
+    GetAllUser: async()=>
+    {
+        try {
+            const result = await userDB.GetAllUser();
+            return result;
         } catch (error) {
             throw error;
         }

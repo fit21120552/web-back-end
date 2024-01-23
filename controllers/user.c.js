@@ -2,12 +2,14 @@ const userModel = require("../models/user.m");
 const bcrypt = require("bcryptjs");
 const { verify } = require("crypto");
 const nodemailer = require("nodemailer");
+const { isEmail } = require("validator");
 const saltRounds = 10;
 
 module.exports = {
   //Home
   Home: async (req, res) => {
     try {
+      //return all user
       return res.json("home page user");
     } catch (error) {
       next(error);
@@ -21,21 +23,18 @@ module.exports = {
       //hash password
       const hash = bcrypt.hashSync(password, saltRounds);
       const user = await userModel.GetUser(username);
+      const userM = await userModel.GetUserByMail(email);
       if (user != undefined) {
-        if (user.username == username) {
-          return res.json("Exists username");
-        } else {
-          const result = await userModel.register(username, hash, email, role);
-          if (result != null) {
-            return res.json("success");
-          }
-        }
-      } else {
-        const result = await userModel.register(username, hash, email, role);
-        if (result != null) {
-          return res.json("success");
-        }
+        return res.json("Exists username!");
       }
+      if (userM != undefined) {
+        return res.json("Exists email!");
+      }
+      const result = await userModel.register(username, hash, email, role);
+      if (result != null) {
+        return res.json("success");
+      }
+
     } catch (error) {
       next(error);
     }
@@ -43,7 +42,18 @@ module.exports = {
   //handle sign in
   SignIn: async (req, res) => {
     try {
-      const { username, password } = req.body;
+      const { username="", password="",email="" } = req.body;
+      //login with google
+      const userM = await userModel.GetUserByMail(email);
+      if(userM!=undefined)
+      {
+        let sess = req.session;
+        sess.idUser = userM._id;
+        sess.isAuthenticated = true;
+        sess.username = userM.username;
+        sess.role = userM.role;
+        return res.json(userM);
+      }
       //check username ( get user by user name)
       const user = await userModel.GetUser(username);
       if (user == undefined) {
@@ -60,11 +70,7 @@ module.exports = {
       sess.isAuthenticated = true;
       sess.username = username;
       sess.role = user.role;
-      if (user.role == "user") {
-        return res.redirect("/user");
-      } else {
-        return res.redirect("/admin");
-      }
+      return res.json(user);
     } catch (error) {
       next(error);
     }
@@ -90,9 +96,10 @@ module.exports = {
     try {
       const id = req.params.id;
       const { password } = req.body;
+      console.log(password)
       const hash = bcrypt.hashSync(password, saltRounds);
       await userModel.UpdateOneField(id, "password", hash);
-      return res.json("Update successfully!");
+      return res.json("success");
     } catch (error) {
       next(error);
     }
@@ -102,27 +109,17 @@ module.exports = {
     const user = req.session.passport.user;
     const email = user.email;
     const username = user.displayName;
-    const User = await userModel.GetUser(username);
+    const data = await userModel.GetUserByMail(email);
     let sess = req.session;
     sess.isAuthenticated = true;
     sess.username = username;
     sess.role = "user";
-
-    if (User != undefined) {
-      if (User.username == username) {
-        return res.redirect("/user");
-      } else {
-        const result = await userModel.register(username, "null", email, "user");
-        if (result != null) {
-          return res.redirect("/user");
-        }
-      }
-    } else {
+    if (data == undefined) {
       const result = await userModel.register(username, "null", email, "user");
-      if (result != null) {
-        return res.redirect("/user");
-      }
+      const returnData =  await userModel.GetUserByMail(email);
+      return res.redirect(`http://localhost:3001/login?email=${email}`)
     }
+    return res.redirect(`http://localhost:3001/login?email=${email}`)
   },
   //reset password
   GetCodeEmail: async (req, res) => {
@@ -142,32 +139,36 @@ module.exports = {
         pass: "lvsjcyqdojmyxazv",
       },
     });
-
     var verifycode = Math.floor(100000 + Math.random() * 900000);
     req.session.verifycode = verifycode;
-    req.session.cookie.makeAge = 3 * 60 * 1000;
+    req.session.cookie.maxAge = 3000 * 60 * 1000 
+    console.log(req.session)
     var mailOptions = {
       from: "pass40697@gmail.com",
       to: email,
       subject: "Verify code to reset password for your account",
       text: `Your verify code is  ${verifycode}`,
     };
-
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
       } else {
-        return res.json("We send code with 5 numbers to email please check !");
+        return res.json("We send code with 6 numbers to email please check !");
       }
     });
   },
+
   //Check code
   CheckCode: async (req, res) => {
-    const { verifyCode } = req.body;
-
+    const { verifyCode,username,password } = req.body;
+    console.log(req.session)
     if (req.session.verifycode == verifyCode) {
-      return res.json("Next to page reset password");
+      const user = await userModel.GetUser(username);
+      const id = user._id;
+      const hash = bcrypt.hashSync(password, saltRounds);
+      await userModel.UpdateOneField(id, "password", hash);
+      return res.json("success");
     }
-    return res.json("code is not correct");
-  },
+    return res.json("Your code is not correct !");
+  }
 };
