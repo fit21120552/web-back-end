@@ -28,7 +28,7 @@ app.use(
     secret: "secret-key-123",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
+    cookie: {secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 },
   })
 );
 app.use(
@@ -37,7 +37,6 @@ app.use(
       credentials: true,
   }),
 );
-
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`));

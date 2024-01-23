@@ -63,7 +63,6 @@ exports.getAll = (Model, popOptions) =>
     // EXECUTE QUERY
     const features = new APIFeatures(query, req.query).filter().sort().fields().pagination();
     const doc = await features.query;
-
     // SEND RESPONSE
     res.status(200).json({
       status: "success",

@@ -9,6 +9,7 @@ module.exports = {
   //Home
   Home: async (req, res) => {
     try {
+      //return all user
       return res.json("home page user");
     } catch (error) {
       next(error);
@@ -95,6 +96,7 @@ module.exports = {
     try {
       const id = req.params.id;
       const { password } = req.body;
+      console.log(password)
       const hash = bcrypt.hashSync(password, saltRounds);
       await userModel.UpdateOneField(id, "password", hash);
       return res.json("success");
@@ -139,8 +141,7 @@ module.exports = {
     });
     var verifycode = Math.floor(100000 + Math.random() * 900000);
     req.session.verifycode = verifycode;
-    req.session.cookie.expires = false;
-    req.session.cookie.maxAge = 3 * 60 * 1000;
+    req.session.cookie.maxAge = 3000 * 60 * 1000 
     console.log(req.session)
     var mailOptions = {
       from: "pass40697@gmail.com",
@@ -148,7 +149,6 @@ module.exports = {
       subject: "Verify code to reset password for your account",
       text: `Your verify code is  ${verifycode}`,
     };
-
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
@@ -157,6 +157,7 @@ module.exports = {
       }
     });
   },
+
   //Check code
   CheckCode: async (req, res) => {
     const { verifyCode,username,password } = req.body;
@@ -169,5 +170,5 @@ module.exports = {
       return res.json("success");
     }
     return res.json("Your code is not correct !");
-  },
+  }
 };
