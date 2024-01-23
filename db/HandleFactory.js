@@ -56,7 +56,6 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    const totalDocuments = await Model.countDocuments();
     let filter = {};
     if (req.params.productId) filter = { product: req.params.productId };
     let query = Model.find(filter);
@@ -66,8 +65,7 @@ exports.getAll = (Model, popOptions) =>
       .filter()
       .sort()
       .fields()
-      .pagination(totalDocuments);
-
+      .pagination(await Model.countDocuments());
     const totalPages = Math.ceil(features.query.totalPages);
     const doc = await features.query;
     // SEND RESPONSE
