@@ -17,7 +17,8 @@ route.get("/signup", userController.GetSignUp)
 route.get('/auth/google',
     passport.authenticate('google', {
         scope:
-            ['email','profile']
+            ['email', 'profile'],
+        prompt: "select_account"
     }
     ));
 route.get('/auth/google/callback',
@@ -26,10 +27,10 @@ route.get('/auth/google/callback',
         failureRedirect: '/auth/google/failure'
     }));
 
-route.get('/success',userController.Success)
-route.get('/auth/google/failure',userController.GetSignIn )
+route.get('/success', userController.Success)
+route.get('/auth/google/failure', userController.GetSignIn)
 
 //reset password by email
-route.post('/resetpassword',userController.GetCodeEmail)
-route.post('/verifycode',userController.CheckCode)
+route.post('/resetpassword', userController.GetCodeEmail)
+route.post('/verifycode', userController.CheckCode)
 module.exports = route; 

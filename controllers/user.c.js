@@ -158,11 +158,15 @@ module.exports = {
   },
   //Check code
   CheckCode: async (req, res) => {
-    const { verifyCode } = req.body;
+    const { verifyCode,username,password } = req.body;
 
     if (req.session.verifycode == verifyCode) {
-      return res.json("Next to page reset password");
+      const user = await userModel.GetUser(username);
+      const id = user._id;
+      const hash = bcrypt.hashSync(password, saltRounds);
+      await userModel.UpdateOneField(id, "password", hash);
+      return res.json("Password change!");
     }
-    return res.json("code is not correct");
+    return res.json("Your code is not correct");
   },
 };
