@@ -6,6 +6,8 @@ const { isEmail } = require("validator");
 const saltRounds = 10;
 //collections sessions
 const sessionModel = require('../models/session.m');
+//collections sessions
+const sessionModel = require('../models/session.m');
 module.exports = {
   //Home
   Home: async (req, res) => {
@@ -41,7 +43,7 @@ module.exports = {
     }
   },
   //handle sign in
-  SignIn: async (req, res) => {
+  SignIn: async (req, res,next) => {
     try {
       const { username = "", password = "", email = "" } = req.body;
       //login with google
@@ -70,7 +72,8 @@ module.exports = {
       sess.isAuthenticated = true;
       sess.username = username;
       sess.role = user.role;
-      return res.json(user);
+      const sessionId = req.sessionID;
+      return res.json({user,sessionId});
     } catch (error) {
       next(error);
     }
@@ -163,26 +166,16 @@ module.exports = {
     }
   },
   //Check code
-  CheckCode: async (req, res, next) => {
-    try {
-      const { verifyCode, username, password } = req.body;
-      const sessionId = "l32AG_ip1bCz4MYlbF187t7fwyuRAsYB";
-      const data = await sessionModel.GetOneSession(sessionId);
-      const parsedSession = JSON.parse(data.session);
-      req.session.verifycode = parsedSession.verifycode;
-      req.session.cookie.maxAge = 3000 * 60 * 1000
-      if (req.session.verifycode == verifyCode) {
-        const user = await userModel.GetUser(username);
-        const id = user._id;
-        const hash = bcrypt.hashSync(password, saltRounds);
-        await userModel.UpdateOneField(id, "password", hash);
-        return res.json("success");
-      }
-      return res.json("Your code is not correct !");
-    }
-    catch (error) {
-      next(error)
-    }
-  }
+  CheckCode: async (req, res) => {
+    const { verifyCode,username,password } = req.body;
 
+    if (req.session.verifycode == verifyCode) {
+      const user = await userModel.GetUser(username);
+      const id = user._id;
+      const hash = bcrypt.hashSync(password, saltRounds);
+      await userModel.UpdateOneField(id, "password", hash);
+      return res.json("success");
+    }
+    return res.json("Your code is not correct");
+  },
 };
