@@ -49,6 +49,13 @@ module.exports =
         } catch (error) {
             throw error;
         }
+    },
+    DeleteUser: async(Id)=>
+    {
+        try {
+            await userDB.DeleteONne(Id)
+        } catch (error) {
+            throw error
+        }
     }
-
 }

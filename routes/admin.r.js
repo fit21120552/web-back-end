@@ -7,4 +7,5 @@ const categoryRouter = require("./categoryRoute");
 route.get("/", adminController.Home);
 route.use("/product", productRouter);
 route.use("/category", categoryRouter);
+route.delete("/user/:id", adminController.DeleteUser);
 module.exports = route;
