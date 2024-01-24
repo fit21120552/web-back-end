@@ -6,8 +6,6 @@ const { isEmail } = require("validator");
 const saltRounds = 10;
 //collections sessions
 const sessionModel = require('../models/session.m');
-//collections sessions
-const sessionModel = require('../models/session.m');
 module.exports = {
   //Home
   Home: async (req, res) => {
@@ -166,16 +164,26 @@ module.exports = {
     }
   },
   //Check code
-  CheckCode: async (req, res) => {
-    const { verifyCode,username,password } = req.body;
-
-    if (req.session.verifycode == verifyCode) {
-      const user = await userModel.GetUser(username);
-      const id = user._id;
-      const hash = bcrypt.hashSync(password, saltRounds);
-      await userModel.UpdateOneField(id, "password", hash);
-      return res.json("success");
+  CheckCode: async (req, res, next) => {
+    try {
+      const { verifyCode, username, password,sessionId } = req.body;
+      const data = await sessionModel.GetOneSession(sessionId);
+      const parsedSession = JSON.parse(data.session);
+      req.session.verifycode = parsedSession.verifycode;
+      req.session.cookie.maxAge = 3000 * 60 * 1000
+      if (req.session.verifycode == verifyCode) {
+        const user = await userModel.GetUser(username);
+        const id = user._id;
+        const hash = bcrypt.hashSync(password, saltRounds);
+        await userModel.UpdateOneField(id, "password", hash);
+        req.session.destroy();
+        return res.json("success");
+      }
+      return res.json("Your code is not correct !");
     }
-    return res.json("Your code is not correct");
-  },
+    catch (error) {
+      next(error)
+    }
+  }
+
 };
