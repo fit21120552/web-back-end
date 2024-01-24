@@ -40,6 +40,15 @@ module.exports =
         } catch (error) {
             throw error;
         }
+    },
+    GetAllUser: async()=>
+    {
+        try {
+            const result = await userDB.GetAllUser();
+            return result;
+        } catch (error) {
+            throw error;
+        }
     }
 
 }

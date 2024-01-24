@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 dotenv.config({ path: "./config.env" });
 const validator = require("validator");
 
-//create schema
+//create schema for user
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -26,6 +26,5 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 });
-//collection part
 const collection = new mongoose.model("user", userSchema);
 module.exports = collection;

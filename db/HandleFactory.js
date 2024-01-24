@@ -56,20 +56,27 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
+    const totalDocuments = await Model.countDocuments();
     let filter = {};
     if (req.params.productId) filter = { product: req.params.productId };
     let query = Model.find(filter);
     if (popOptions) query = query.populate(popOptions);
     // EXECUTE QUERY
-    const features = new APIFeatures(query, req.query).filter().sort().fields().pagination();
-    const doc = await features.query;
-
-    // SEND RESPONSE
+    const features = new APIFeatures(query, req.query)
+      .filter()
+      .sort()
+      .fields()
+      .pagination(totalDocuments);
+    const doc = await features;
+    const data = await doc.query;
+    const totalPages = Math.ceil(doc.query.totalPages);
+    // SEND RESPONSE`
     res.status(200).json({
       status: "success",
       result: doc.length,
+      totalPages: totalPages,
       data: {
-        data: doc,
+        data: data,
       },
     });
   });

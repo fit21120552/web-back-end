@@ -30,7 +30,15 @@ module.exports =
         } catch (error) {
             throw error
         }
-
+    },
+    GetAllUser: async()=>
+    {
+        try {
+            const data = await collection.find();
+            return data;
+        } catch (error) {
+            throw error
+        }
     },
     UpdateOneField: async (ID, namefield, newvalue) => {
         try {

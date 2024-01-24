@@ -7,7 +7,7 @@ const port = process.env.port || 3000;
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode | 500;
-  res.status(statusCode).send(err.message);
+  res.status(statusCode).json(err.message);
 });
 
 // Connect to database
