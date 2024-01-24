@@ -5,6 +5,8 @@ const reviewRouter = require("./reviewRoute");
 productRouter.route("/").get(productController.getAllProduct);
 productRouter.route("/:id").get(productController.getProduct);
 
+// stats
+productRouter.route("/related-products/:productId").get(productController.getRelatedProducts);
 // permission admin
 productRouter.route("/create").post(productController.createProduct);
 productRouter.route("/update/:id").patch(productController.updateProduct);
