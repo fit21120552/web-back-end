@@ -53,5 +53,24 @@ module.exports =
             throw error;
         }
 
+    },
+    DeleteONne: async(Id)=>
+    {
+        try {
+            await collection.findByIdAndDelete(Id);
+            
+        } catch (error) {
+            throw error;
+        }
+    },
+    FindOne: async(Id)=>
+    {
+        try {
+            const data = await collection.findById(Id);
+            return data;
+            
+        } catch (error) {
+            throw error;
+        }
     }
 }

@@ -36,8 +36,10 @@ class APIFeatures {
     }
     return this;
   }
-  async pagination(totalDocuments) {
+  async pagination(Model) {
     // 4) pagination
+    const queryS = this.query;
+    const NumberData = await Model.find(queryS).countDocuments();
     const page = this.queryString.page * 1 || 1;
     const limit = this.queryString.limit * 1 || 100;
     const skip = (page - 1) * limit;
@@ -45,7 +47,7 @@ class APIFeatures {
     // Calculate total number of pages
     let totalPages = 0;
     if (this.queryString.page) {
-      totalPages = Math.ceil(totalDocuments / limit);
+      totalPages = Math.ceil(NumberData / limit);
     } else {
       totalPages = 1;
     }
