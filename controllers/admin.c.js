@@ -20,5 +20,19 @@ module.exports =
         } catch (error) {
             next (error);
         }
+    },
+    DetailUser: async(req,res,next)=>
+    {
+        try {
+            const id = req.params.id;
+            const data = await userModel.DetailUser(id);
+            if(data!=undefined)
+            {
+                return res.json(data);
+            }
+            return res.json("Not exist user !");
+        } catch (error) {
+            next (error);
+        }
     }
 }

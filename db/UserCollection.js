@@ -62,5 +62,15 @@ module.exports =
         } catch (error) {
             throw error;
         }
+    },
+    FindOne: async(Id)=>
+    {
+        try {
+            const data = await collection.findById(Id);
+            return data;
+            
+        } catch (error) {
+            throw error;
+        }
     }
 }
