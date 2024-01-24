@@ -53,5 +53,14 @@ module.exports =
             throw error;
         }
 
+    },
+    DeleteONne: async(Id)=>
+    {
+        try {
+            await collection.findByIdAndDelete(Id);
+            
+        } catch (error) {
+            throw error;
+        }
     }
 }
