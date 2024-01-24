@@ -56,24 +56,23 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    const totalDocuments = await Model.countDocuments();
     let filter = {};
     if (req.params.productId) filter = { product: req.params.productId };
     let query = Model.find(filter);
     if (popOptions) query = query.populate(popOptions);
     // EXECUTE QUERY
-    const features = new APIFeatures(query, req.query)
-      .filter()
-      .sort()
-      .fields()
-      .pagination(totalDocuments);
+    const features = new APIFeatures(query, req.query).filter().sort().fields().pagination(Model);
     const doc = await features;
     const data = await doc.query;
+    const result = data.length;
     const totalPages = Math.ceil(doc.query.totalPages);
     // SEND RESPONSE`
+    if (result === 0) {
+      return next(new AppError("no document that found", 404));
+    }
     res.status(200).json({
       status: "success",
-      result: doc.length,
+      result: data.length,
       totalPages: totalPages,
       data: {
         data: data,
