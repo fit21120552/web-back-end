@@ -6,9 +6,9 @@ const morgan = require("morgan");
 const path = require("path");
 dotenv.config({ path: "./../config.env" });
 const app = express();
-var cors = require('cors');
+var cors = require("cors");
 //use mongo store to save session
-const MongoStore = require('connect-mongo');
+const MongoStore = require("connect-mongo");
 
 const ErrorHandlerController = require("./../controllers/ErrorController.js");
 const appError = require("./../utils/appError.js");
@@ -31,7 +31,8 @@ app.use(
   session({
     secret: "secret-key-123",
     store: MongoStore.create({
-      mongoUrl: 'mongodb+srv://thuan:vsEsXKsLsoKlpegT@cluster0.j4s8j5c.mongodb.net/QLBANHANG?retryWrites=true&w=majority',
+      mongoUrl:
+        "mongodb+srv://thuan:vsEsXKsLsoKlpegT@cluster0.j4s8j5c.mongodb.net/QLBANHANG?retryWrites=true&w=majority",
     }),
     resave: false,
     saveUninitialized: false,
@@ -41,9 +42,8 @@ app.use(
 );
 app.use(
   cors({
-    origin: 'http://localhost:3001',
+    origin: "http://localhost:3001",
     credentials: true,
-
   })
 );
 

@@ -11,9 +11,15 @@ class APIFeatures {
     excludedFields.forEach((el) => delete queryObj[el]);
     // 1B) advanced filtering
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
-    this.query.find(JSON.parse(queryStr));
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt|regex)\b/g, (match) => `$${match}`);
+    // Handle regex with case-insensitive option
+    if (queryObj.title && queryObj.title.regex) {
+      queryStr = queryStr.replace(`"${queryObj.title.regex}"`, (match) => {
+        
+        return `/${JSON.parse(match)}/i`;
+      });
+    }
+    this.query.find(eval(`(${queryStr})`));
     return this;
   }
   sort() {

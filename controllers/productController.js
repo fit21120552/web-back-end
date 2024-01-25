@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const products = require("./../models/productModel");
 const factory = require("./../db/HandleFactory");
 const catchAsync = require("./../utils/catchAsync");
+const AppError = require("../utils/appError");
 
 exports.getAllProduct = factory.getAll(products, { path: "reviews" });
 
@@ -12,3 +13,44 @@ exports.getProduct = factory.getOne(products, { path: "reviews" });
 exports.updateProduct = factory.updateOne(products);
 
 exports.deleteProduct = factory.deleteOne(products);
+
+exports.getRelatedProducts = catchAsync(async (req, res, next) => {
+  const currentProduct = await products.findById(req.params.productId);
+  if (!currentProduct) {
+    return next(new AppError("no product found", 404));
+  }
+  const relatedProducts = await products
+    .find({
+      $and: [
+        { category: currentProduct.category },
+        { price: { $gte: currentProduct.price - 1000, $lte: currentProduct.price + 1000 } },
+        { _id: { $ne: currentProduct._id } },
+      ],
+    })
+    .limit(4);
+  res.status(200).json({
+    status: "success",
+    result: relatedProducts.length,
+    data: {
+      data: relatedProducts,
+    },
+  });
+});
+
+exports.searchProduct = catchAsync(async (req, res, next) => {
+  const { search } = req.query;
+  const searchConditions = {
+    $or: [
+      { title: new RegExp(search, "i") },
+      { description: new RegExp(search, "i") },
+      { category: new RegExp(search, "i") },
+    ],
+  };
+  res.status(200).json({
+    status: "success",
+    result: products.length,
+    data: {
+      data: searchConditions,
+    },
+  });
+});
