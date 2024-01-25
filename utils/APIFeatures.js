@@ -12,8 +12,14 @@ class APIFeatures {
     // 1B) advanced filtering
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt|regex)\b/g, (match) => `$${match}`);
-
-    this.query.find(JSON.parse(queryStr));
+    // Handle regex with case-insensitive option
+    if (queryObj.title && queryObj.title.regex) {
+      queryStr = queryStr.replace(`"${queryObj.title.regex}"`, (match) => {
+        
+        return `/${JSON.parse(match)}/i`;
+      });
+    }
+    this.query.find(eval(`(${queryStr})`));
     return this;
   }
   sort() {

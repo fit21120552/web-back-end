@@ -50,6 +50,10 @@ const ProductSchema = new mongoose.Schema(
       type: String,
     },
     images: [String],
+    createAt: {
+      type: Date,
+      default: Date.now(),
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -62,7 +66,6 @@ ProductSchema.virtual("reviews", {
   foreignField: "product",
   localField: "_id",
 });
-
 
 ProductSchema.post("findByIdAndUpdate", async function (doc) {
   const category = await categoryModel.findOne({ name: doc.category });

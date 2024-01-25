@@ -29,6 +29,7 @@
     "hpp": "^0.2.3",
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.2",
+    "mongo-connect": "^0.0.6",
     "mongodb": "^6.2.0",
     "mongoose": "^5.13.21",
     "morgan": "^1.10.0",
