@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const categoryModel = require("./categoryModel");
 const ProductSchema = new mongoose.Schema(
   {
     title: {
@@ -50,6 +50,10 @@ const ProductSchema = new mongoose.Schema(
       type: String,
     },
     images: [String],
+    createAt: {
+      type: Date,
+      default: Date.now(),
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -63,5 +67,20 @@ ProductSchema.virtual("reviews", {
   localField: "_id",
 });
 
+ProductSchema.post("findByIdAndUpdate", async function (doc) {
+  const category = await categoryModel.findOne({ name: doc.category });
+  if (category) {
+    category.productCount = await product.countDocuments({ category: doc.category });
+    await category.save();
+  }
+});
+
+ProductSchema.post("findByIdAndDelete", async function (doc) {
+  const category = await categoryModel.findOne({ name: doc.category });
+  if (category) {
+    category.productCount = await product.countDocuments({ category: doc.category });
+    await category.save();
+  }
+});
 const product = mongoose.model("Product", ProductSchema);
 module.exports = product;

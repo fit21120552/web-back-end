@@ -41,7 +41,7 @@ CategorySchema.pre("save", async function (next) {
 
 CategorySchema.pre("save", async function (next) {
   const existingCategory = await Category.findOne({ name: this.name });
-  if (existingCategory) { 
+  if (existingCategory) {
     return next();
   }
   const products = await productModel.find({ category: this.name });
