@@ -53,7 +53,7 @@ module.exports =
     DeleteUser: async(Id)=>
     {
         try {
-            await userDB.DeleteONne(Id)
+            await userDB.DeleteOne(Id)
         } catch (error) {
             throw error
         }
