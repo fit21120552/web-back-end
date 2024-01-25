@@ -22,9 +22,8 @@ exports.getRelatedProducts = catchAsync(async (req, res, next) => {
   const relatedProducts = await products
     .find({
       $and: [
-        { brand: currentProduct.brand },
         { category: currentProduct.category },
-        { price: { $gte: currentProduct.price - 500, $lte: currentProduct.price + 500 } },
+        { price: { $gte: currentProduct.price - 1000, $lte: currentProduct.price + 1000 } },
         { _id: { $ne: currentProduct._id } },
       ],
     })
