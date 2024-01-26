@@ -7,6 +7,7 @@ const path = require("path");
 dotenv.config({ path: "./../config.env" });
 const app = express();
 var cors = require("cors");
+const multer = require('multer')
 //use mongo store to save session
 const MongoStore = require("connect-mongo");
 
@@ -21,6 +22,8 @@ const commonRouter = require("../routes/common.r.js");
 const productRouter = require("../routes/productRoute.js");
 const categoryRouter = require("./../routes/categoryRoute.js");
 const reviewRouter = require("./../routes/reviewRoute.js");
+const orderRouter = require("./../routes/orderRoute.js");
+const imageRouter = require("./../routes/image.r.js")
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -33,8 +36,7 @@ app.use(
     store: MongoStore.create({
       mongoUrl:
         "mongodb+srv://thuan:vsEsXKsLsoKlpegT@cluster0.j4s8j5c.mongodb.net/QLBANHANG?retryWrites=true&w=majority",
-        autoRemove: 'interval',
-        autoRemoveInterval: 10 
+        ttl: 10 * 60
     }),
     resave: false,
     saveUninitialized: false,
@@ -46,6 +48,7 @@ app.use(
   cors({
     origin: "http://localhost:3001",
     credentials: true,
+  
   })
 );
 
@@ -55,11 +58,13 @@ app.use(express.static(`${__dirname}/public`));
 
 // middleware router
 app.use("/api/v1/product", productRouter);
+app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/user", auth.authentication, auth.authorization, userRouter);
 app.use(commonRouter);
 app.use("/admin", auth.authentication, auth.authorization, adminRouter);
+app.use('/image', imageRouter);
 // app.all("*", (req, res, next) => {
 //   next(new appError(`Can not find ${req.originalUrl} on server`, 404));
 // });

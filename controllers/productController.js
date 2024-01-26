@@ -37,20 +37,3 @@ exports.getRelatedProducts = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.searchProduct = catchAsync(async (req, res, next) => {
-  const { search } = req.query;
-  const searchConditions = {
-    $or: [
-      { title: new RegExp(search, "i") },
-      { description: new RegExp(search, "i") },
-      { category: new RegExp(search, "i") },
-    ],
-  };
-  res.status(200).json({
-    status: "success",
-    result: products.length,
-    data: {
-      data: searchConditions,
-    },
-  });
-});

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const productModel = require("./../models/productModel");
 const CategorySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -39,15 +38,15 @@ CategorySchema.pre("save", async function (next) {
   next();
 });
 
-// CategorySchema.pre("save", async function (next) {
-//   const existingCategory = await Category.findOne({ name: this.name });
-//   if (existingCategory) {
-//     return next();
-//   }
-//   const products = await productModel.find({ category: this.name });
-//   const uniqueBrands = [...new Set(products.map((product) => product.brand))];
-//   this.subCategory = uniqueBrands.map((brand) => ({ name: brand }));
-//   next();
-// });
+CategorySchema.pre("save", async function (next) {
+  const existingCategory = await Category.findOne({ name: this.name });
+  if (existingCategory) {
+    return next();
+  }
+  const ListProduct = await require("./productModel").find({ category: this.name });
+  const uniqueBrands = [...new Set(ListProduct.map((product) => product.brand))];
+  this.subCategory = uniqueBrands.map((brand) => ({ name: brand }));
+  next();
+});
 const Category = mongoose.model("Category", CategorySchema);
 module.exports = Category;
