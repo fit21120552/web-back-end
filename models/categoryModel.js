@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const productModel = require("./productModel");
 const CategorySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -44,8 +43,8 @@ CategorySchema.pre("save", async function (next) {
   if (existingCategory) {
     return next();
   }
-  const products = await productModel.find({ category: this.name });
-  const uniqueBrands = [...new Set(products.map((product) => product.brand))];
+  const ListProduct = await require("./productModel").find({ category: this.name });
+  const uniqueBrands = [...new Set(ListProduct.map((product) => product.brand))];
   this.subCategory = uniqueBrands.map((brand) => ({ name: brand }));
   next();
 });
