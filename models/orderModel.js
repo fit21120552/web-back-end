@@ -64,10 +64,11 @@ const OrderSchema = new mongoose.Schema({
 
 OrderSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "product",
+    path: "products",
   }).populate({
     path: "user",
   });
+  next();
 });
 OrderSchema.pre("save", async function (next) {
   if (this.isModified("StatusPaid") && this.StatusPaid === true) {
@@ -84,9 +85,9 @@ OrderSchema.statics.calcTotalPrice = async function (doc) {
   totalPrice = totalPrice + doc.tax + doc.ShipCost;
   return totalPrice;
 };
-
-OrderSchema.post("save", async function () {
+OrderSchema.pre("save", async function (next) {
   this.price = await this.constructor.calcTotalPrice(this);
+  next();
 });
 const order = mongoose.model("Order", OrderSchema);
 module.exports = order;
