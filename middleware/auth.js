@@ -4,7 +4,7 @@ module.exports = {
     try {
       const sessionID = req.headers.sessionid || "null";
       const data = await sessionModel.GetOneSession(sessionID);
-      
+      console.log("sessionid: ",req.headers.sessionid)
       if (data != undefined) {
         const parsedSession = JSON.parse(data.session);
         req.session.isAuthenticated = parsedSession.isAuthenticated || false;
@@ -25,6 +25,9 @@ module.exports = {
   },
   authorization: async (req, res, next) => {
     if (req.session.isAuthenticated && req.session.role) {
+
+      console.log(req.body)
+      console.log("param:",req.params)
       let originalUrl = req.originalUrl;
       let role = req.session.role;
       if (originalUrl.startsWith(`/${role}`)) {
