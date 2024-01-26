@@ -21,6 +21,7 @@ const commonRouter = require("../routes/common.r.js");
 const productRouter = require("../routes/productRoute.js");
 const categoryRouter = require("./../routes/categoryRoute.js");
 const reviewRouter = require("./../routes/reviewRoute.js");
+const orderRouter = require("./../routes/orderRoute.js");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -53,6 +54,7 @@ app.use(express.static(`${__dirname}/public`));
 
 // middleware router
 app.use("/api/v1/product", productRouter);
+app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/user", auth.authentication, auth.authorization, userRouter);
