@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
 const factory = require("./../db/HandleFactory");
 const OrderModel = require("./../models/orderModel");
-
-exports.getAllOrder = factory.getAll(OrderModel, {
-  path: "product",
+const catchAsync = require("./../utils/catchAsync");
+exports.setUser = catchAsync(async (req, res, next) => {
+  if (!req.body.user) req.body.user = req.session.idUser;
+  next();
 });
+exports.getAllOrder = factory.getAll(OrderModel);
 exports.getOrder = factory.getOne(OrderModel);
 exports.createOrder = factory.createOne(OrderModel);
 exports.updateOrder = factory.updateOne(OrderModel);

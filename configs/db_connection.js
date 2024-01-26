@@ -17,13 +17,16 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true, 
-    lowercase: true, 
+    unique: true,
+    lowercase: true,
     validate: [validator.isEmail, "Invalid Email"],
   },
   role: {
     type: String,
     required: true,
+  },
+  avatar: {
+    type: String,
   },
 });
 const collection = new mongoose.model("user", userSchema);
