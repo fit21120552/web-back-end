@@ -58,7 +58,7 @@ module.exports =
     {
         try {
             console.log("id: ",Id)
-            await collection.findByIdAndDelete({"_id": ObjectId(`${Id}`)});
+            await collection.findByIdAndDelete({_id: Id});
             
         } catch (error) {
             throw error;
