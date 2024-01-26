@@ -33,10 +33,12 @@ app.use(
     store: MongoStore.create({
       mongoUrl:
         "mongodb+srv://thuan:vsEsXKsLsoKlpegT@cluster0.j4s8j5c.mongodb.net/QLBANHANG?retryWrites=true&w=majority",
+        autoRemove: 'interval',
+        autoRemoveInterval: 10 
     }),
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 },
+    cookie: { secure: false, httpOnly: true, maxAge: 10 * 60 * 60 * 1000 },
     credentials: true,
   })
 );
