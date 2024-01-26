@@ -1,5 +1,6 @@
 const userModel = require("../models/user.m");
 const bcrypt = require("bcryptjs");
+const axios = require('axios');
 const { verify } = require("crypto");
 const nodemailer = require("nodemailer");
 const { isEmail } = require("validator");
@@ -17,7 +18,7 @@ module.exports = {
     }
   },
   //handle sign up
-  SignUp: async (req, res) => {
+  SignUp: async (req, res, next) => {
     try {
       const { username, password, email, role = "user" } = req.body;
       //check exists username
@@ -33,7 +34,7 @@ module.exports = {
       }
       const result = await userModel.register(username, hash, email, role);
       if (result != null) {
-        return res.json("success");
+         return res.json("success");
       }
 
     } catch (error) {
@@ -41,7 +42,7 @@ module.exports = {
     }
   },
   //handle sign in
-  SignIn: async (req, res,next) => {
+  SignIn: async (req, res, next) => {
     try {
       const { username = "", password = "", email = "" } = req.body;
       //login with google
@@ -71,7 +72,7 @@ module.exports = {
       sess.username = username;
       sess.role = user.role;
       const sessionId = req.sessionID;
-      return res.json({user,sessionId});
+      return res.json({ user, sessionId });
     } catch (error) {
       next(error);
     }
@@ -156,7 +157,7 @@ module.exports = {
         if (error) {
           res.status(500).json({ error: 'Something not correct please try again !' });
         } else {
-          res.status(200).json({msg: "We send code with 6 numbers to email please check !",sessionId});
+          res.status(200).json({ msg: "We send code with 6 numbers to email please check !", sessionId });
         }
       });
     } catch (error) {
@@ -166,7 +167,7 @@ module.exports = {
   //Check code
   CheckCode: async (req, res, next) => {
     try {
-      const { verifyCode, username, password,sessionId } = req.body;
+      const { verifyCode, username, password, sessionId } = req.body;
       const data = await sessionModel.GetOneSession(sessionId);
       const parsedSession = JSON.parse(data.session);
       req.session.verifycode = parsedSession.verifycode;

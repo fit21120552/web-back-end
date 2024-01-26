@@ -9,7 +9,7 @@ exports.deleteOne = (Model) =>
       console.log("not found")
       return next(new AppError("no document that found id ", 404));
     }
-    console.log(" found")
+   // console.log(" found")
     res.status(204).json({
       status: "success",
       message: "delete success",
@@ -32,7 +32,10 @@ exports.updateOne = (Model) =>
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    console.log("req:",req)
+    console.log("req.body: ",req.body)
     const doc = await Model.create(req.body);
+    console.log("doc: ",doc)
     res.status(201).json({
       status: "success",
       data: {
