@@ -11,7 +11,7 @@ module.exports = {
         req.session.idUser = parsedSession.idUser;
         req.session.username = parsedSession.username;
         req.session.role = parsedSession.role
-        req.session.cookie.maxAge = 10 * 60 * 60 * 1000;
+        req.session.cookie.maxAge = 10 * 60 * 1000;
       }
       if (req.session.isAuthenticated) {
         return next();
