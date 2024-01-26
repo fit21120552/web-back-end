@@ -44,6 +44,7 @@ CategorySchema.pre("save", async function (next) {
     return next();
   }
   const ListProduct = await require("./productModel").find({ category: this.name });
+  console.log(ListProduct);
   const uniqueBrands = [...new Set(ListProduct.map((product) => product.brand))];
   this.subCategory = uniqueBrands.map((brand) => ({ name: brand }));
   next();
