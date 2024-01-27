@@ -98,9 +98,15 @@ OrderSchema.pre("save", async function (next) {
   next();
 });
 
-OrderSchema.post('findOneAndUpdate', async function (doc) {
-  // Thực hiện hành động sau khi findOneAndUpdate được thực hiện
-  console.log('Order updated:', doc);
+OrderSchema.post("findOneAndUpdate", async function (doc) {
+  if (doc.StatusDelivered === true) {
+    for (const el of doc.products) {
+      const product = await productModel.findById(el);
+      product.stock--;
+      if (product.stock <= 0) product.stock = 0;
+      await product.save();
+    }
+  }
 });
 const order = mongoose.model("Order", OrderSchema);
 module.exports = order;
