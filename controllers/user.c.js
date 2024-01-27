@@ -53,7 +53,7 @@ module.exports = {
         sess.isAuthenticated = true;
         sess.username = userM.username;
         sess.role = userM.role;
-        req.session.cookie.maxAge =10* 60 * 1000;
+        req.session.cookie.maxAge =10*60* 60 * 1000;
         return res.json(userM);
       }
       //check username ( get user by user name)
@@ -72,7 +72,7 @@ module.exports = {
       sess.isAuthenticated = true;
       sess.username = username;
       sess.role = user.role;
-      req.session.cookie.maxAge = 10*60* 1000;
+      req.session.cookie.maxAge = 10*60*60* 1000;
       const sessionId = req.sessionID;
       console.log(req.session)
       return res.json({ user, sessionId });

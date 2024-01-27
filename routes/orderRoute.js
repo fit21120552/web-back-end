@@ -11,5 +11,4 @@ OrderRouter.route("/create").post(OrderController.setUser, OrderController.creat
 OrderRouter.route("/getOne/:id").get(OrderController.getOrder);
 OrderRouter.route("/update/:id").patch(OrderController.updateOrder);
 OrderRouter.route("/delete/:id").delete(OrderController.deleteOrder);
-
 module.exports = OrderRouter;
