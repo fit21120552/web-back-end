@@ -5,11 +5,12 @@ const { verify } = require("crypto");
 const nodemailer = require("nodemailer");
 const { isEmail } = require("validator");
 const saltRounds = 10;
+const FileUtility = require("../utils/FileUtility")
 //collections sessions
 const sessionModel = require('../models/session.m');
 module.exports = {
   //Home
-  Home: async (req, res) => {
+  Home: async (req, res, next) => {
     try {
       //return all user
       return res.json("home page user");
@@ -82,7 +83,7 @@ module.exports = {
     }
   },
   //get page sign in
-  GetSignIn: async (req, res) => {
+  GetSignIn: async (req, res, next) => {
     try {
       return res.json("Sign in page");
     } catch (error) {
@@ -90,7 +91,7 @@ module.exports = {
     }
   },
   //get page sign up
-  GetSignUp: async (req, res) => {
+  GetSignUp: async (req, res, next) => {
     try {
       return res.json("Sign up page");
     } catch (error) {
@@ -98,7 +99,7 @@ module.exports = {
     }
   },
   //update password
-  UpdatePassword: async (req, res) => {
+  UpdatePassword: async (req, res, next) => {
     try {
       const id = req.params.id;
       const { password } = req.body;
@@ -189,6 +190,32 @@ module.exports = {
     catch (error) {
       next(error)
     }
-  }
+  },
+
+  UpdateAvatar:  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      console.log('id: ',id)
+      console.log("file: ", req.file)
+    
+      if (req.file.fieldname==="avatar") { //image of user
+        let destinationPath = `uploads/users/${id}/`
+        await FileUtility.createFolderIfNotExists(destinationPath) //create folder for user's image
+        // move image to new folder
+        await FileUtility.moveImageFile(req.file.path, destinationPath + req.file.filename,(err) => {
+          if (err) {
+              console.error(err);
+              console.log('Failed to move the image file')
+             
+          }}) 
+      }
+
+      await userModel.UpdateOneField(id, "avatar", req.file.filename);
+      const user = await userModel.DetailUser(id)
+      return res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
 
 };
