@@ -44,9 +44,10 @@ module.exports = {
   //handle sign in
   SignIn: async (req, res, next) => {
     try {
+
       const { username = "", password = "", email = "" } = req.body;
       //login with google
-      const userM = await userModel.GetUserByMail(email);
+      const userM= await userModel.GetUserByMail(email);
       if (userM != undefined) {
         let sess = req.session;
         sess.idUser = userM._id;
@@ -54,7 +55,8 @@ module.exports = {
         sess.username = userM.username;
         sess.role = userM.role;
         req.session.cookie.maxAge =10*60* 60 * 1000;
-        return res.json(userM);
+        let sessionId = req.sessionID;
+        return res.json({ userM, sessionId });
       }
       //check username ( get user by user name)
       const user = await userModel.GetUser(username);
@@ -74,7 +76,6 @@ module.exports = {
       sess.role = user.role;
       req.session.cookie.maxAge = 10*60*60* 1000;
       const sessionId = req.sessionID;
-      console.log(req.session)
       return res.json({ user, sessionId });
     } catch (error) {
       next(error);
@@ -120,7 +121,7 @@ module.exports = {
     sess.username = username;
     sess.role = "user";
     if (data == undefined) {
-      const result = await userModel.register(username, "null", email, "user");
+      const result = await userModel.register(username, "$2a$10$xCCD108Zwg8MKO3HqDPWTOhqw8pSq0s5VL/pK5jYNtg1WlThY4rve", email, "user");
       const returnData = await userModel.GetUserByMail(email);
       return res.redirect(`http://localhost:3001/login?email=${email}`)
     }

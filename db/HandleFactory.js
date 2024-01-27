@@ -58,6 +58,7 @@ exports.updateOne = (Model) =>
           }}) 
       }
     }
+    console.log(doc);
     res.status(200).json({
       status: "success",
       data: {
@@ -131,6 +132,7 @@ exports.getAll = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.productId) filter = { product: req.params.productId };
+    if (req.body.user) filter = { user: req.body.user };
     let query = Model.find(filter);
     if (popOptions) query = query.populate(popOptions);
     // EXECUTE QUERY
