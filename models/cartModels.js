@@ -40,7 +40,7 @@ CartSchema.pre(/^find/, function (next) {
   });
   this.populate({
     path: "user",
-    select: "username email",
+    select: "username email ",
   });
   next();
 });

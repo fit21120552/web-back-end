@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-
+const productModel = require("./productModel");
 const OrderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
     ref: "user",
     required: [true, "order must belong to a user"],
   },
-  product: [
+  products: [
     {
       type: mongoose.Schema.ObjectId,
       ref: "Product",
@@ -15,7 +15,7 @@ const OrderSchema = new mongoose.Schema({
   ],
   price: {
     type: Number,
-    required: [true, "order must have a total price"],
+    default: 0,
   },
   createdAt: {
     type: Date,
@@ -62,5 +62,32 @@ const OrderSchema = new mongoose.Schema({
   },
 });
 
+OrderSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "products",
+  }).populate({
+    path: "user",
+  });
+  next();
+});
+OrderSchema.pre("save", async function (next) {
+  if (this.isModified("StatusPaid") && this.StatusPaid === true) {
+    this.StatusDelivered = true;
+  }
+  next();
+});
+OrderSchema.statics.calcTotalPrice = async function (doc) {
+  let totalPrice = 0;
+  for (const el of doc.products) {
+    const product = await productModel.findById(el);
+    totalPrice += product.price;
+  }
+  totalPrice = totalPrice + doc.tax + doc.ShipCost;
+  return totalPrice;
+};
+OrderSchema.pre("save", async function (next) {
+  this.price = await this.constructor.calcTotalPrice(this);
+  next();
+});
 const order = mongoose.model("Order", OrderSchema);
 module.exports = order;

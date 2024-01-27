@@ -53,7 +53,7 @@ module.exports = {
         sess.isAuthenticated = true;
         sess.username = userM.username;
         sess.role = userM.role;
-        req.session.cookie.maxAge = 10 * 60 * 60 * 1000;
+        req.session.cookie.maxAge =10*60* 60 * 1000;
         return res.json(userM);
       }
       //check username ( get user by user name)
@@ -72,8 +72,9 @@ module.exports = {
       sess.isAuthenticated = true;
       sess.username = username;
       sess.role = user.role;
-      req.session.cookie.maxAge = 10 * 60 * 60 * 1000;
+      req.session.cookie.maxAge = 10*60*60* 1000;
       const sessionId = req.sessionID;
+      console.log(req.session)
       return res.json({ user, sessionId });
     } catch (error) {
       next(error);
@@ -147,7 +148,7 @@ module.exports = {
       req.header = "check";
       var verifycode = Math.floor(100000 + Math.random() * 900000);
       req.session.verifycode = verifycode;
-      req.session.cookie.maxAge = 10 * 60 * 60 * 1000;
+      req.session.cookie.maxAge =5 * 60 * 1000;
       const sessionId = req.sessionID;
       var mailOptions = {
         from: "pass40697@gmail.com",
@@ -173,7 +174,7 @@ module.exports = {
       const data = await sessionModel.GetOneSession(sessionId);
       const parsedSession = JSON.parse(data.session);
       req.session.verifycode = parsedSession.verifycode;
-      req.session.cookie.maxAge = 10 * 60 * 60 * 1000;
+      req.session.cookie.maxAge = 5 * 60 * 1000;
       if (req.session.verifycode == verifyCode) {
         const user = await userModel.GetUser(username);
         const id = user._id;
