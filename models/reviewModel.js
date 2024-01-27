@@ -32,7 +32,7 @@ const ReviewSchema = new mongoose.Schema(
   }
 );
 
-ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
+
 ReviewSchema.pre(/^find/, function (next) {
   this.populate({
     path: "user",
@@ -74,11 +74,13 @@ ReviewSchema.post("save", function () {
 
 ReviewSchema.pre(/^findOneAnd/, async function (next) {
   this.r = await this.findOne();
+  console.log(this.r);
   next();
 });
 
 ReviewSchema.post(/^findOneAnd/, async function (next) {
   await this.r.constructor.calcAverageRatings(this.r.product._id);
 });
+
 const review = mongoose.model("Review", ReviewSchema);
 module.exports = review;
