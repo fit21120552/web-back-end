@@ -6,6 +6,7 @@ const productRouter = require("./productRoute");
 const categoryRouter = require("./categoryRoute");
 const orderRouter = require("./orderRoute");
 route.get("/", adminController.Home);
+route.route("/getAll").get(adminController.getAllAccount);
 route.use("/product", productRouter);
 route.use("/category", categoryRouter);
 route.use("/orders", orderRouter);
