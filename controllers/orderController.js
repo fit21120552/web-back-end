@@ -1,7 +1,9 @@
 const factory = require("./../db/HandleFactory");
 const OrderModel = require("./../models/orderModel");
 const catchAsync = require("./../utils/catchAsync");
+
 exports.setUser = catchAsync(async (req, res, next) => {
+  
   if (!req.body.user) req.body.user = req.session.idUser;
   next();
 });
