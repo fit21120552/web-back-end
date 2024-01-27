@@ -82,5 +82,13 @@ ProductSchema.post("findByIdAndDelete", async function (doc) {
     await category.save();
   }
 });
+ProductSchema.post("save", async function (doc, next) {
+  const category = await categoryModel.findOne({ name: this.category });
+  if (category) {
+    category.productCount = await product.countDocuments({ category: this.category });
+    category.products.push(this);
+    await category.save();
+  }
+});
 const product = mongoose.model("Product", ProductSchema);
 module.exports = product;
