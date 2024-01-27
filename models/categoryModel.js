@@ -35,7 +35,6 @@ CategorySchema.pre(/^find/, function (next) {
 
 CategorySchema.post("save", async function (next) {
   this.productCount = this.products.length;
-  next();
 });
 
 CategorySchema.pre("save", async function (next) {

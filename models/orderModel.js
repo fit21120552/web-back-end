@@ -97,5 +97,10 @@ OrderSchema.pre("save", async function (next) {
   this.quantity = obj.quantityProduct;
   next();
 });
+
+OrderSchema.post('findOneAndUpdate', async function (doc) {
+  // Thực hiện hành động sau khi findOneAndUpdate được thực hiện
+  console.log('Order updated:', doc);
+});
 const order = mongoose.model("Order", OrderSchema);
 module.exports = order;
