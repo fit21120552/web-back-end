@@ -89,6 +89,7 @@ ProductSchema.post("save", async function (doc, next) {
     category.products.push(this);
     await category.save();
   }
+  next();
 });
 const product = mongoose.model("Product", ProductSchema);
 module.exports = product;
