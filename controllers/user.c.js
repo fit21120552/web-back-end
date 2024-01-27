@@ -44,6 +44,7 @@ module.exports = {
   //handle sign in
   SignIn: async (req, res, next) => {
     try {
+
       const { username = "", password = "", email = "" } = req.body;
       //login with google
       const userM = await userModel.GetUserByMail(email);
@@ -54,7 +55,8 @@ module.exports = {
         sess.username = userM.username;
         sess.role = userM.role;
         req.session.cookie.maxAge =10*60* 60 * 1000;
-        return res.json(userM);
+        let sessionId = req.sessionID;
+        return res.json({ userM, sessionId });
       }
       //check username ( get user by user name)
       const user = await userModel.GetUser(username);
@@ -74,7 +76,6 @@ module.exports = {
       sess.role = user.role;
       req.session.cookie.maxAge = 10*60*60* 1000;
       const sessionId = req.sessionID;
-      console.log(req.session)
       return res.json({ user, sessionId });
     } catch (error) {
       next(error);

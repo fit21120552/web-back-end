@@ -19,6 +19,7 @@ exports.updateOne = (Model) =>
       new: true,
       runValidators: true,
     });
+    console.log(doc);
     res.status(200).json({
       status: "success",
       data: {
