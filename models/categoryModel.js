@@ -33,7 +33,7 @@ CategorySchema.pre(/^find/, function (next) {
   next();
 });
 
-CategorySchema.pre("save", async function (next) {
+CategorySchema.post("save", async function (next) {
   this.productCount = this.products.length;
   next();
 });

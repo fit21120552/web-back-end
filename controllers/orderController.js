@@ -1,9 +1,8 @@
 const factory = require("./../db/HandleFactory");
 const OrderModel = require("./../models/orderModel");
 const catchAsync = require("./../utils/catchAsync");
-
+const AppError = require("./../utils/appError");
 exports.setUser = catchAsync(async (req, res, next) => {
-  
   if (!req.body.user) req.body.user = req.session.idUser;
   next();
 });
@@ -148,6 +147,47 @@ exports.getStatsOrder = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getStatsPlaceOrder = catchAsync(async (req, res, next) => {
+  const { idOrder } = req.params;
+  const order = await OrderModel.findById(idOrder).populate("user").populate("products");
+
+  if (!order) {
+    return next(new AppError("no order found with that id", 404));
+  }
+
+  const statsProductPrice = order.products.map((product) => ({
+    productInfo: product,
+    quantity: order.quantity,
+    totalPrice: product.price * order.quantity,
+  }));
+
+  const formattedOrder = {
+    user: order.user,
+    products: order.products,
+    quantity: order.quantity,
+    price: order.price,
+    createdAt: order.createdAt,
+    StatusPaid: order.StatusPaid,
+    StatusDelivered: order.StatusDelivered,
+    StatusCanceled: order.StatusCanceled,
+    tax: order.tax,
+    ShipCost: order.ShipCost,
+    address: order.address,
+    city: order.city,
+    phone: order.phone,
+    postalCode: order.postalCode,
+    country: order.country,
+    paymentMethod: order.paymentMethod,
+    statsProductPrice,
+  };
+
+  res.status(200).json({
+    status: "success",
+    formattedOrder,
+  });
+});
+
 exports.getAllOrder = factory.getAll(OrderModel);
 exports.getOrder = factory.getOne(OrderModel);
 exports.createOrder = factory.createOne(OrderModel);
