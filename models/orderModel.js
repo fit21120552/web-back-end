@@ -13,6 +13,10 @@ const OrderSchema = new mongoose.Schema({
       required: [true, "order must belong to a product"],
     },
   ],
+  quantity: {
+    type: Number,
+    default: 1,
+  },
   price: {
     type: Number,
     default: 0,
@@ -78,15 +82,19 @@ OrderSchema.pre("save", async function (next) {
 });
 OrderSchema.statics.calcTotalPrice = async function (doc) {
   let totalPrice = 0;
+  let quantityProduct = 0;
   for (const el of doc.products) {
     const product = await productModel.findById(el);
     totalPrice += product.price;
+    quantityProduct++;
   }
   totalPrice = totalPrice + doc.tax + doc.ShipCost;
-  return totalPrice;
+  return { totalPrice, quantityProduct };
 };
 OrderSchema.pre("save", async function (next) {
-  this.price = await this.constructor.calcTotalPrice(this);
+  const obj = await this.constructor.calcTotalPrice(this);
+  this.price = obj.totalPrice;
+  this.quantity = obj.quantityProduct;
   next();
 });
 const order = mongoose.model("Order", OrderSchema);
