@@ -20,8 +20,8 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    console.log('data: ',req.params.id, req.body)
-    if (req.file) {
+    console.log('data update: ',req.params.id, req.body, req.file)
+    if (req.file && req.file!==undefined && req.file!==null) {
       if (req.file.fieldname==="thumbnail") {
           req.body.thumbnail = req.file.filename
       } else if  (req.file.fieldname==="avatar") {
@@ -29,13 +29,13 @@ exports.updateOne = (Model) =>
       }
       
     }
-
+    console.log("oke:", req.body)
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
 
-    if (doc && req.file) {
+    if (doc && req.file && req.file!==undefined && req.file!==null ) {
       if (req.file.fieldname==="thumbnail") { //image of product
         let destinationPath = `uploads/products/${doc._id}/`
         await FileUtility.createFolderIfNotExists(destinationPath) //create folder for product's image
@@ -80,7 +80,7 @@ exports.createOne = (Model) =>
     }
     const doc = await Model.create(req.body);
     console.log("doc: ",doc)
-    if (doc && req.file) {
+    if (doc && req.file && req.file!==undefined && req.file!==null) {
       if (req.file.fieldname==="thumbnail") { //image of product
         let destinationPath = `uploads/products/${doc._id}/`
         await FileUtility.createFolderIfNotExists(destinationPath) //create folder for product's image
