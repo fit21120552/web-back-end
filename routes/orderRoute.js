@@ -12,4 +12,6 @@ OrderRouter.route("/getOne/:id").get(OrderController.getOrder);
 OrderRouter.route("/update/:id").patch(OrderController.updateOrder);
 OrderRouter.route("/delete/:id").delete(OrderController.deleteOrder);
 
+// permission user
+OrderRouter.route("/getOrder").get(OrderController.setUser, OrderController.getAllOrder);
 module.exports = OrderRouter;
