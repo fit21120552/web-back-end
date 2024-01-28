@@ -13,6 +13,22 @@ const OrderSchema = new mongoose.Schema({
       required: [true, "order must belong to a product"],
     },
   ],
+  statsProductPrice: [
+    {
+      product: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Product",
+      },
+      totalPrice: {
+        type: Number,
+        default: 0,
+      },
+      quantityProduct: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
   quantity: {
     type: Number,
     default: 1,
@@ -95,9 +111,44 @@ OrderSchema.pre("save", async function (next) {
   const obj = await this.constructor.calcTotalPrice(this);
   this.price = obj.totalPrice;
   this.quantity = obj.quantityProduct;
+  for (const el of this.products) {
+    const product = await productModel.findById(el);
+    const existingStat = this.statsProductPrice.find((stat) => stat.product.equals(el));
+    if (!existingStat) {
+      this.statsProductPrice.push({
+        product: el,
+        totalPrice: product.price,
+        quantityProduct: 1,
+      });
+    } else {
+      existingStat.totalPrice += product.price;
+      existingStat.quantityProduct += 1;
+    }
+  }
   next();
 });
 
+// OrderSchema.post("save", async function (doc) {
+//   console.log("dang tien hanh tinh toan");
+//   console.log(doc);
+//   for (const el of doc.products) {
+//     const product = await productModel.findById(el);
+//     const existingStat = doc.statsProductPrice.find((stat) => stat.product.equals(el));
+
+//     if (!existingStat) {
+//       doc.statsProductPrice.push({
+//         product: el,
+//         totalPrice: product.price,
+//         quantityProduct: 1,
+//       });
+//     } else {
+//       existingStat.totalPrice += product.price;
+//       existingStat.quantityProduct += 1;
+//     }
+//   }
+//   await doc.save();
+//   console.log("da tinh toan thanh cong");
+// });
 OrderSchema.post("findOneAndUpdate", async function (doc) {
   if (doc.StatusDelivered === true) {
     for (const el of doc.products) {
