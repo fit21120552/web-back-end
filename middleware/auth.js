@@ -2,8 +2,6 @@ const sessionModel = require('../models/session.m');
 module.exports = {
   authentication: async (req, res, next) => {
     try {
-      console.log("authorization req: ",req.body)
-      console.log("sessionid: ",req.headers.sessionid)
       const sessionID = req.headers.sessionid || "null";
       const data = await sessionModel.GetOneSession(sessionID);
       if (data != undefined) {
@@ -18,7 +16,7 @@ module.exports = {
         return next();
       }
       else {
-        return res.redirect("/");
+        return res.json("You don't login !");
       }
     } catch (error) {
       next(error);
@@ -27,8 +25,7 @@ module.exports = {
   authorization: async (req, res, next) => {
     if (req.session.isAuthenticated && req.session.role) {
 
-      //console.log("authorization req: ",req)
-      console.log("param:",req.params)
+
       let originalUrl = req.originalUrl;
       let role = req.session.role;
       if (originalUrl.startsWith(`/${role}`)) {
