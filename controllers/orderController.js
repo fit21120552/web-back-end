@@ -23,17 +23,28 @@ exports.getStatsRevenueByDayOfWeek = catchAsync(async (req, res, next) => {
       $sort: { _id: 1 },
     },
   ]);
-
   const weeklyStats = [0, 0, 0, 0, 0, 0, 0];
 
   stats.forEach((stat) => {
     const dayOfWeek = stat._id;
     const numOrder = stat.numOrder;
     const totalPrice = stat.totalPrice;
+    let position = 0;
 
-    weeklyStats[dayOfWeek - 2] = { numOrder, totalPrice };
+    if (dayOfWeek === 1) {
+      position = weeklyStats.length - 1;
+    } else if (dayOfWeek === 2) {
+      position = 0;
+    } else {
+      for (let i = 0; i < weeklyStats.length - 1; i++) {
+        if (dayOfWeek < weeklyStats[i].dayOfWeek) {
+          position = i;
+          break;
+        }
+      }
+    }
+    weeklyStats[position] = { numOrder, totalPrice };
   });
-
   res.status(200).json({
     status: "success",
     data: {
