@@ -27,6 +27,12 @@ const OrderSchema = new mongoose.Schema({
         type: Number,
         default: 0,
       },
+      nameProduct: {
+        type: String,
+      },
+      imageProduct: {
+        type: String,
+      },
     },
   ],
   quantity: {
@@ -119,6 +125,8 @@ OrderSchema.pre("save", async function (next) {
         product: el,
         totalPrice: product.price,
         quantityProduct: 1,
+        nameProduct: product.name,
+        imageProduct: product.image,
       });
     } else {
       existingStat.totalPrice += product.price;
@@ -128,27 +136,6 @@ OrderSchema.pre("save", async function (next) {
   next();
 });
 
-// OrderSchema.post("save", async function (doc) {
-//   console.log("dang tien hanh tinh toan");
-//   console.log(doc);
-//   for (const el of doc.products) {
-//     const product = await productModel.findById(el);
-//     const existingStat = doc.statsProductPrice.find((stat) => stat.product.equals(el));
-
-//     if (!existingStat) {
-//       doc.statsProductPrice.push({
-//         product: el,
-//         totalPrice: product.price,
-//         quantityProduct: 1,
-//       });
-//     } else {
-//       existingStat.totalPrice += product.price;
-//       existingStat.quantityProduct += 1;
-//     }
-//   }
-//   await doc.save();
-//   console.log("da tinh toan thanh cong");
-// });
 OrderSchema.post("findOneAndUpdate", async function (doc) {
   if (doc.StatusDelivered === true) {
     for (const el of doc.products) {
