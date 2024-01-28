@@ -2,8 +2,6 @@ const sessionModel = require('../models/session.m');
 module.exports = {
   authentication: async (req, res, next) => {
     try {
-      console.log("authorization req: ",req.body)
-      console.log("sessionid: ",req.headers.sessionid)
       const sessionID = req.headers.sessionid || "null";
       const data = await sessionModel.GetOneSession(sessionID);
       if (data != undefined) {

@@ -5,13 +5,13 @@ const FileUtility = require("../utils/FileUtility")
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    console.log("delete id: ",req.params.id)
+    
     const doc = await Model.findByIdAndDelete(req.params.id);
     if (!doc) {
-      console.log("not found")
+     
       return next(new AppError("no document that found id ", 404));
     }
-   // console.log(" found")
+  
     res.status(204).json({
       status: "success",
       message: "delete success",
@@ -20,7 +20,7 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    console.log('data: ',req.params.id, req.body)
+  
     if (req.file) {
       if (req.file.fieldname==="thumbnail") {
           req.body.thumbnail = req.file.filename
@@ -58,7 +58,7 @@ exports.updateOne = (Model) =>
           }}) 
       }
     }
-    console.log(doc);
+  
     res.status(200).json({
       status: "success",
       data: {
@@ -69,8 +69,7 @@ exports.updateOne = (Model) =>
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    //console.log("req:",req)
-    console.log("req.file: ",req.file)
+   
     if (req.file) {
       if (req.file.fieldname==="thumbnail") {
           req.body.thumbnail = req.file.filename
@@ -80,7 +79,7 @@ exports.createOne = (Model) =>
       
     }
     const doc = await Model.create(req.body);
-    console.log("doc: ",doc)
+  
     if (doc && req.file) {
       if (req.file.fieldname==="thumbnail") { //image of product
         let destinationPath = `uploads/products/${doc._id}/`
