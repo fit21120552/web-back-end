@@ -7,6 +7,7 @@ const path = require("path");
 dotenv.config({ path: "./../config.env" });
 const app = express();
 var cors = require("cors");
+const multer = require('multer')
 //use mongo store to save session
 const MongoStore = require("connect-mongo");
 
@@ -23,6 +24,7 @@ const categoryRouter = require("./../routes/categoryRoute.js");
 const reviewRouter = require("./../routes/reviewRoute.js");
 const orderRouter = require("./../routes/orderRoute.js");
 const adminPageRouter = require("./../routes/adminPageRoute.js");
+const imageRouter = require("./../routes/image.r.js")
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -48,6 +50,7 @@ app.use(
   cors({
     origin: "http://localhost:3001",
     credentials: true,
+  
   })
 );
 
@@ -64,6 +67,7 @@ app.use("/api/v1/reviews", reviewRouter);
 app.use("/user", auth.authentication, auth.authorization, userRouter);
 app.use(commonRouter);
 app.use("/admin", auth.authentication, auth.authorization, adminRouter);
+app.use('/image', imageRouter);
 // app.all("*", (req, res, next) => {
 //   next(new appError(`Can not find ${req.originalUrl} on server`, 404));
 // });

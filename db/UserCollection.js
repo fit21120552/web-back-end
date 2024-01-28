@@ -54,10 +54,11 @@ module.exports =
         }
 
     },
-    DeleteONne: async(Id)=>
+    DeleteOne: async(Id)=>
     {
         try {
-            await collection.findByIdAndDelete(Id);
+            console.log("id: ",Id)
+            await collection.findByIdAndDelete({_id: Id});
             
         } catch (error) {
             throw error;

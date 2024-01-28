@@ -1,12 +1,17 @@
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const APIFeatures = require("./../utils/APIFeatures");
+const FileUtility = require("../utils/FileUtility")
+
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    console.log("delete id: ",req.params.id)
     const doc = await Model.findByIdAndDelete(req.params.id);
     if (!doc) {
+      console.log("not found")
       return next(new AppError("no document that found id ", 404));
     }
+   // console.log(" found")
     res.status(204).json({
       status: "success",
       message: "delete success",
@@ -15,10 +20,44 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    console.log('data: ',req.params.id, req.body)
+    if (req.file) {
+      if (req.file.fieldname==="thumbnail") {
+          req.body.thumbnail = req.file.filename
+      } else if  (req.file.fieldname==="avatar") {
+          req.body.avatar = req.file.filename
+      }
+      
+    }
+
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
+
+    if (doc && req.file) {
+      if (req.file.fieldname==="thumbnail") { //image of product
+        let destinationPath = `uploads/products/${doc._id}/`
+        await FileUtility.createFolderIfNotExists(destinationPath) //create folder for product's image
+        // move image to new folder
+        await FileUtility.moveImageFile(req.file.path, destinationPath + req.file.filename,(err) => {
+          if (err) {
+              console.error(err);
+              console.log('Failed to move the image file')
+             
+          }}) 
+      } else if (req.file.fieldname==="avatar") { //image of user
+        let destinationPath = `uploads/users/${doc._id}/`
+        await FileUtility.createFolderIfNotExists(destinationPath) //create folder for user's image
+        // move image to new folder
+        await FileUtility.moveImageFile(req.file.path, destinationPath + req.file.filename,(err) => {
+          if (err) {
+              console.error(err);
+              console.log('Failed to move the image file')
+             
+          }}) 
+      }
+    }
     console.log(doc);
     res.status(200).json({
       status: "success",
@@ -30,7 +69,41 @@ exports.updateOne = (Model) =>
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    //console.log("req:",req)
+    console.log("req.file: ",req.file)
+    if (req.file) {
+      if (req.file.fieldname==="thumbnail") {
+          req.body.thumbnail = req.file.filename
+      } else if  (req.file.fieldname==="avatar") {
+          req.body.avatar = req.file.filename
+      }
+      
+    }
     const doc = await Model.create(req.body);
+    console.log("doc: ",doc)
+    if (doc && req.file) {
+      if (req.file.fieldname==="thumbnail") { //image of product
+        let destinationPath = `uploads/products/${doc._id}/`
+        await FileUtility.createFolderIfNotExists(destinationPath) //create folder for product's image
+        // move image to new folder
+        await FileUtility.moveImageFile(req.file.path, destinationPath + req.file.filename,(err) => {
+          if (err) {
+              console.error(err);
+              console.log('Failed to move the image file')
+             
+          }}) 
+      } else if (req.file.fieldname==="avatar") { //image of user
+        let destinationPath = `uploads/users/${doc._id}/`
+        await FileUtility.createFolderIfNotExists(destinationPath) //create folder for user's image
+        // move image to new folder
+        await FileUtility.moveImageFile(req.file.path, destinationPath + req.file.filename,(err) => {
+          if (err) {
+              console.error(err);
+              console.log('Failed to move the image file')
+             
+          }}) 
+      }
+    }
     res.status(201).json({
       status: "success",
       data: {
