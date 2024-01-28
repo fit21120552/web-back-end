@@ -16,7 +16,7 @@ module.exports = {
         return next();
       }
       else {
-        return res.redirect("/");
+        return res.json("You don't login !");
       }
     } catch (error) {
       next(error);
