@@ -125,8 +125,8 @@ OrderSchema.pre("save", async function (next) {
         product: el,
         totalPrice: product.price,
         quantityProduct: 1,
-        nameProduct: product.name,
-        imageProduct: product.image,
+        nameProduct: product.title,
+        imageProduct: product.thumbnail,
       });
     } else {
       existingStat.totalPrice += product.price;
