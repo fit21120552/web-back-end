@@ -21,8 +21,8 @@ mongoose
   });
 
 // Read JSON file
-const product = JSON.parse(fs.readFileSync(`${__dirname}/product.json`, "utf-8"));
-const category = JSON.parse(fs.readFileSync(`${__dirname}/category.json`, "utf-8"));
+const product = JSON.parse(fs.readFileSync(`${__dirname}/productNew.json`, "utf-8"));
+const category = JSON.parse(fs.readFileSync(`${__dirname}/categoryNew.json`, "utf-8"));
 // Import data into database
 const importData = async () => {
   try {
@@ -38,8 +38,8 @@ const importData = async () => {
 // DELEte all data from DB
 const deleteData = async () => {
   try {
-    // await productModel.deleteMany({});
-    // await categoryModel.deleteMany({});
+    await productModel.deleteMany({});
+    await categoryModel.deleteMany({});
     await orderModel.deleteMany({});
     console.log("data successfully deleted");
   } catch (err) {
